@@ -58,8 +58,13 @@ class HomePage extends StatelessWidget {
                 layers: [
                   TileLayerOptions(
                       urlTemplate:
-                          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      subdomains: ['a', 'b', 'c']),
+                         "https://api.mapbox.com/v4/"
+                          "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
+                      additionalOptions: {
+                        'accessToken': 'pk.eyJ1IjoiaWdhdXJhYiIsImEiOiJjazFhOWlkN2QwYzA5M2RyNWFvenYzOTV0In0.lzjuSBZC6LcOy_oRENLKCg',
+                        'id': 'mapbox.streets',
+                      },
+                  ),
                   MarkerLayerOptions(markers: markers)
                 ],
               ),
@@ -70,3 +75,4 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+// pk.eyJ1IjoiaWdhdXJhYiIsImEiOiJjazFhOWlkN2QwYzA5M2RyNWFvenYzOTV0In0.lzjuSBZC6LcOy_oRENLKCg
