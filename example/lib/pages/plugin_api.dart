@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong/latlong.dart';
@@ -19,8 +21,8 @@ class PluginPage extends StatelessWidget {
             Flexible(
               child: FlutterMap(
                 options: MapOptions(
-                  center: LatLng(51.5, -0.09),
-                  zoom: 5.0,
+                  center: LatLng(27.700769,85.300140),
+                  zoom: 20.0,
                   plugins: [
                     MyCustomPlugin(),
                   ],
@@ -30,7 +32,7 @@ class PluginPage extends StatelessWidget {
                       urlTemplate:
                           'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                       subdomains: ['a', 'b', 'c']),
-                  MyCustomPluginOptions(text: "I'm a plugin!"),
+                  MyCustomPluginOptions(text: "I'm a plugin!", latLng: LatLng(27.700769,85.300140),context: context ),
                 ],
               ),
             ),
@@ -43,7 +45,9 @@ class PluginPage extends StatelessWidget {
 
 class MyCustomPluginOptions extends LayerOptions {
   final String text;
-  MyCustomPluginOptions({this.text = ''});
+  LatLng latLng;
+  BuildContext context;
+  MyCustomPluginOptions({this.text = '', this.latLng,this.context});
 }
 
 class MyCustomPlugin implements MapPlugin {
@@ -51,14 +55,35 @@ class MyCustomPlugin implements MapPlugin {
   Widget createLayer(
       LayerOptions options, MapState mapState, Stream<Null> stream) {
     if (options is MyCustomPluginOptions) {
-      var style = TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 24.0,
-        color: Colors.red,
-      );
-      return Text(
-        options.text,
-        style: style,
+      var context = options.context;
+      // var style = TextStyle(
+      //   fontWeight: FontWeight.bold,
+      //   fontSize: 24.0,
+      //   color: Colors.red,
+      // );
+
+      return FlutterMap(
+        options: MapOptions(
+          center: options.latLng,
+          zoom: 13.0
+        ),
+        layers: [
+          MarkerLayerOptions(
+            markers: [
+              Marker(
+                width: 20.0,
+                height: 20.0,
+                point: options.latLng,
+                builder: (context) => Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.blueAccent
+                  ),
+                )
+              )
+            ]
+          )
+        ],
       );
     }
     throw Exception('Unknown options type for MyCustom'
@@ -68,5 +93,5 @@ class MyCustomPlugin implements MapPlugin {
   @override
   bool supportsLayer(LayerOptions options) {
     return options is MyCustomPluginOptions;
-  }
+  } List<Marker> markers;
 }
