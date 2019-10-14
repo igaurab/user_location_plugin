@@ -5,6 +5,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^0.1.0
+  location: ^2.3.5
   flutter_map:
     path: ../
 
