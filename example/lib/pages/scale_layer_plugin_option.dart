@@ -23,6 +23,7 @@ class ScaleLayerPlugin implements MapPlugin {
   Widget createLayer(
       LayerOptions options, MapState mapState, Stream<Null> stream) {
     if (options is ScaleLayerPluginOption) {
+      print("DRAWING...");
       return ScaleLayer(options, mapState, stream);
     }
     throw Exception('Unknown options type for ScaleLayerPlugin: $options');

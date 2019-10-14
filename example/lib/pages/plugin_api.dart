@@ -21,7 +21,6 @@ class PluginPage extends StatelessWidget {
             Flexible(
               child: FlutterMap(
                 options: MapOptions(
-                  center: LatLng(37.77823, -122.391),
                   zoom: 20.0,
                   plugins: [
                     MyCustomPlugin(),
@@ -37,8 +36,7 @@ class PluginPage extends StatelessWidget {
                       'id': 'mapbox.streets',
                     },
                   ),
-                  MyCustomPluginOptions(
-                      text: "I'm a plugin!", context: context),
+                  MyCustomPluginOptions(context: context),
                 ],
               ),
             ),
@@ -51,20 +49,20 @@ class PluginPage extends StatelessWidget {
 //             'accessToken': 'pk.eyJ1IjoiaWdhdXJhYiIsImEiOiJjazFhOWlkN2QwYzA5M2RyNWFvenYzOTV0In0.lzjuSBZC6LcOy_oRENLKCg',
 
 class MyCustomPluginOptions extends LayerOptions {
-  final String text;
   LatLng latLng;
   BuildContext context;
   GetLocation loc = GetLocation();
 
-  MyCustomPluginOptions({this.text = '', this.context});
+  MyCustomPluginOptions({this.context});
 
-  void getLocation() async {
+  Future<LatLng> getLocation() async {
     print('GOT TO LOCATION');
     await loc.getLocation().then((onValue) {
       latLng = onValue;
       print(latLng);
-      print('The latitide is  ${onValue.latitude}');
+      print('The latitide is  ${latLng.latitude}');
     });
+    return latLng;
   }
 }
 
@@ -74,30 +72,36 @@ class MyCustomPlugin implements MapPlugin {
       LayerOptions options, MapState mapState, Stream<Null> stream) {
     if (options is MyCustomPluginOptions) {
       var context = options.context;
-      // var style = TextStyle(
-      //   fontWeight: FontWeight.bold,
-      //   fontSize: 24.0,
-      //   color: Colors.red,
-      // );
-      var customPlugin = MyCustomPluginOptions(text: '', context: context);
-      customPlugin.getLocation();
+      var customPlugin = MyCustomPluginOptions(context: context);
+      var latLng = customPlugin.getLocation();
+      // print("INSIDE PLUGIN: $latLng");
 
-      return FlutterMap(
-        options: MapOptions(center: options.latLng, zoom: 13.0),
-        layers: [
-          MarkerLayerOptions(markers: [
-            Marker(
-                width: 40.0,
-                height: 40.0,
-                point: options.latLng,
-                builder: (context) => Container(
-                      child: Icon(
-                        Icons.my_location,
-                        color: Colors.blueAccent[300],
-                      ),
-                    ))
-          ])
-        ],
+      return FutureBuilder(
+        future: customPlugin.getLocation(),
+        builder: (context, AsyncSnapshot snapshot) {
+          LatLng value = snapshot.data;
+          print("Data of Snapshot ${value}");
+          print("$value.latitude");
+          print("$value.longitude");
+          // MapController mapController = MapController();
+          // mapController.move(LatLng(value.latitude, value.longitude), 10.0);
+          return FlutterMap(
+            options: MapOptions(center: value, zoom: 10.0),
+            layers: [
+              MarkerLayerOptions(markers: [
+                Marker(
+                    point: value,
+                    builder: (context) => Container(
+                          child: Icon(
+                            Icons.my_location,
+                            color: Colors.blueAccent[300],
+                          ),
+                        ))
+              ])
+            ],
+            // mapController: mapController,
+          );
+        },
       );
     }
     throw Exception('Unknown options type for MyCustom'
