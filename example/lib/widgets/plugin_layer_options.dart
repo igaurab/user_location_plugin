@@ -14,10 +14,8 @@ class MyCustomPluginOptions extends LayerOptions {
   MyCustomPluginOptions({this.context});
 
   Future<LatLng> getLocation() async {
-    print('GOT TO LOCATION');
     await loc.getLocation().then((onValue) {
       latLng = onValue;
-      // print(latLng);
       print('The latitide is  ${latLng.latitude}');
     });
     return latLng;
