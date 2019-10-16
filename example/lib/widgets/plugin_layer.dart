@@ -21,7 +21,7 @@ class MapsPluginLayer extends StatefulWidget {
 class _MapsPluginLayerState extends State<MapsPluginLayer> {
   MapController controller = MapController();
   LatLng _currentLocation;
-  List<Marker> markers;
+  List<Marker> markers = [];
 
   @override
   void initState() {
@@ -34,16 +34,20 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
           } else {
             _currentLocation = LatLng(onValue.latitude, onValue.longitude);
           }
-          markers = [
-            Marker(
-                height: 30.0,
-                width: 30.0,
-                point: LatLng(
-                    _currentLocation.latitude, _currentLocation.longitude),
-                builder: (context) {
-                  return Icon(Icons.location_on);
-                })
-          ];
+          markers.add(Marker(
+              height: 30.0,
+              width: 30.0,
+              point:
+                  LatLng(_currentLocation.latitude, _currentLocation.longitude),
+              builder: (context) {
+                return Container(
+                  height: 30.0,
+                  width: 30.0,
+                  color: Colors.blueAccent,
+                  child: Text("YA"),
+                );
+              }));
+
           widget.map.move(
               LatLng(_currentLocation.latitude, _currentLocation.longitude),
               widget.map.zoom);
