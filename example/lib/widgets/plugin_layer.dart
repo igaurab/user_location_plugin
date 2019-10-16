@@ -40,10 +40,10 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
             _currentLocation = LatLng(onValue.latitude, onValue.longitude);
             print(_currentLocation);
           }
-          // markers.clear();
+          markers.clear();
           markers.add(Marker(
-              height: 2.0,
-              width: 2.0,
+              height: 10.0,
+              width: 10.0,
               point:
                   LatLng(_currentLocation.latitude, _currentLocation.longitude),
               builder: (context) {
@@ -55,9 +55,9 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
                 );
               }));
 
-          // widget.map.move(
-          //     LatLng(_currentLocation.latitude, _currentLocation.longitude),
-          //     widget.map.zoom);
+          controller.move(
+              LatLng(_currentLocation.latitude, _currentLocation.longitude),
+              controller.zoom);
         });
       }
     });
@@ -66,10 +66,20 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
   @override
   Widget build(BuildContext context) {
     return FlutterMap(
-      options: MapOptions(
-        center: LatLng(27.7172, 85.3240),
-      ),
-      layers: [MarkerLayerOptions(markers: markers)],
+      options: MapOptions(center: LatLng(27.7172, 85.3240), zoom: 15.0),
+      layers: [
+        TileLayerOptions(
+          urlTemplate: "https://api.tiles.mapbox.com/v4/"
+              "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
+          additionalOptions: {
+            'accessToken':
+                'pk.eyJ1IjoiaWdhdXJhYiIsImEiOiJjazFhOWlkN2QwYzA5M2RyNWFvenYzOTV0In0.lzjuSBZC6LcOy_oRENLKCg',
+            'id': 'mapbox.streets',
+          },
+        ),
+        MarkerLayerOptions(markers: markers),
+      ],
+      mapController: controller,
     );
   }
 }

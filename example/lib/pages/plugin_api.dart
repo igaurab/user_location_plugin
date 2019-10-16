@@ -14,6 +14,7 @@ class PluginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: AppBar(title: Text('Plugins')),
       drawer: buildDrawer(context, PluginPage.route),
@@ -30,15 +31,6 @@ class PluginPage extends StatelessWidget {
                   ],
                 ),
                 layers: [
-                  TileLayerOptions(
-                    urlTemplate: "https://api.tiles.mapbox.com/v4/"
-                        "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
-                    additionalOptions: {
-                      'accessToken':
-                          'pk.eyJ1IjoiaWdhdXJhYiIsImEiOiJjazFhOWlkN2QwYzA5M2RyNWFvenYzOTV0In0.lzjuSBZC6LcOy_oRENLKCg',
-                      'id': 'mapbox.streets',
-                    },
-                  ),
                   MyCustomPluginOptions(context: context),
                 ],
               ),

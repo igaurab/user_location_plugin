@@ -57,13 +57,13 @@ class HomePage extends StatelessWidget {
                 ),
                 layers: [
                   TileLayerOptions(
-                      urlTemplate:
-                         "https://api.mapbox.com/v4/"
-                          "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
-                      additionalOptions: {
-                        'accessToken': 'pk.eyJ1IjoiaWdhdXJhYiIsImEiOiJjazFhOWlkN2QwYzA5M2RyNWFvenYzOTV0In0.lzjuSBZC6LcOy_oRENLKCg',
-                        'id': 'mapbox.streets',
-                      },
+                    urlTemplate: "https://api.mapbox.com/v4/"
+                        "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
+                    additionalOptions: {
+                      'accessToken':
+                          'pk.eyJ1IjoiaWdhdXJhYiIsImEiOiJjazFhOWlkN2QwYzA5M2RyNWFvenYzOTV0In0.lzjuSBZC6LcOy_oRENLKCg',
+                      'id': 'mapbox.streets',
+                    },
                   ),
                   MarkerLayerOptions(markers: markers)
                 ],
