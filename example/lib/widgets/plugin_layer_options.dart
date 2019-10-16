@@ -7,17 +7,6 @@ import '../widgets/drawer.dart';
 import 'dart:async';
 
 class MyCustomPluginOptions extends LayerOptions {
-  LatLng latLng;
   BuildContext context;
-  GetLocation loc = GetLocation();
-
   MyCustomPluginOptions({this.context});
-
-  Future<LatLng> getLocation() async {
-    await loc.getLocation().then((onValue) {
-      latLng = onValue;
-      print('The latitide is  ${latLng.latitude}');
-    });
-    return latLng;
-  }
 }

@@ -25,7 +25,12 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
 
   @override
   void initState() {
-    var location = new Location();
+    super.initState();
+    _subscribeToLocationChanges();
+  }
+
+  void _subscribeToLocationChanges() {
+    var location = Location();
     location.onLocationChanged().listen((onValue) {
       if (onValue.latitude is double) {
         setState(() {
@@ -33,35 +38,36 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
             _currentLocation = LatLng(0, 0);
           } else {
             _currentLocation = LatLng(onValue.latitude, onValue.longitude);
+            print(_currentLocation);
           }
+          // markers.clear();
           markers.add(Marker(
-              height: 30.0,
-              width: 30.0,
+              height: 2.0,
+              width: 2.0,
               point:
                   LatLng(_currentLocation.latitude, _currentLocation.longitude),
               builder: (context) {
                 return Container(
-                  height: 30.0,
-                  width: 30.0,
-                  color: Colors.blueAccent,
-                  child: Text("YA"),
+                  height: 10.0,
+                  width: 10.0,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.redAccent),
                 );
               }));
 
-          widget.map.move(
-              LatLng(_currentLocation.latitude, _currentLocation.longitude),
-              widget.map.zoom);
+          // widget.map.move(
+          //     LatLng(_currentLocation.latitude, _currentLocation.longitude),
+          //     widget.map.zoom);
         });
       }
     });
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return FlutterMap(
       options: MapOptions(
-        center: LatLng(0, 0),
+        center: LatLng(27.7172, 85.3240),
       ),
       layers: [MarkerLayerOptions(markers: markers)],
     );
