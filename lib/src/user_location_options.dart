@@ -6,5 +6,7 @@ import '../utils/getLocation.dart';
 
 class UserLocationOptions extends LayerOptions {
   BuildContext context;
-  UserLocationOptions({this.context});
+  MapController mapController;
+  List<Marker> markers;
+  UserLocationOptions({this.context, this.mapController, this.markers});
 }

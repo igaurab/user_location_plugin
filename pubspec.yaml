@@ -1,8 +1,8 @@
 name: user_location
-description: A new flutter plugin project.
-version: 0.0.1
-author:
-homepage:
+description: A plugin for FlutterMap to handle and plot the current user location
+version: 0.0.2
+author: Gaurab Panthee <gaurab.panthee@gmail.com>
+homepage: https://github.com/igaurab/UserLocationPlugin
 
 environment:
   sdk: ">=2.1.0 <3.0.0"

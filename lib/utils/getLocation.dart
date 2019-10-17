@@ -27,10 +27,6 @@ class GetLocation {
     }
     try {
       await location.getLocation().then((onValue) {
-        if (onValue.latitude is double) {
-          print('Latitude is double ${onValue.latitude.toString()}');
-        }
-
         print(onValue.latitude.toString() + "," + onValue.longitude.toString());
         latlng = LatLng(onValue.latitude, onValue.longitude);
         print(latlng);

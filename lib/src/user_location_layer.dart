@@ -17,9 +17,7 @@ class MapsPluginLayer extends StatefulWidget {
 }
 
 class _MapsPluginLayerState extends State<MapsPluginLayer> {
-  MapController controller = MapController();
   LatLng _currentLocation;
-  List<Marker> markers = [];
 
   @override
   void initState() {
@@ -30,54 +28,37 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
   void _subscribeToLocationChanges() {
     var location = Location();
     location.onLocationChanged().listen((onValue) {
-      if (onValue.latitude is double) {
-        setState(() {
-          if (onValue == null) {
-            _currentLocation = LatLng(0, 0);
-          } else {
-            _currentLocation = LatLng(onValue.latitude, onValue.longitude);
-            print(_currentLocation);
-          }
-          markers.clear();
-          markers.add(Marker(
-              height: 10.0,
-              width: 10.0,
-              point:
-                  LatLng(_currentLocation.latitude, _currentLocation.longitude),
-              builder: (context) {
-                return Container(
-                  height: 10.0,
-                  width: 10.0,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: Colors.redAccent),
-                );
-              }));
+      setState(() {
+        if (onValue.latitude == null || onValue.longitude == null) {
+          _currentLocation = LatLng(0, 0);
+        } else {
+          _currentLocation = LatLng(onValue.latitude, onValue.longitude);
+          print(_currentLocation);
+        }
+        widget.options.markers.clear();
+        widget.options.markers.add(Marker(
+            height: 10.0,
+            width: 10.0,
+            point:
+                LatLng(_currentLocation.latitude, _currentLocation.longitude),
+            builder: (context) {
+              return Container(
+                height: 10.0,
+                width: 10.0,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle, color: Colors.redAccent),
+              );
+            }));
 
-          controller.move(
-              LatLng(_currentLocation.latitude, _currentLocation.longitude),
-              controller.zoom);
-        });
-      }
+        widget.options.mapController.move(
+            LatLng(_currentLocation.latitude, _currentLocation.longitude),
+            widget.map.zoom ?? 15);
+      });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return FlutterMap(
-      options: MapOptions(center: LatLng(27.7172, 85.3240), zoom: 15.0),
-      layers: [
-        TileLayerOptions(
-          urlTemplate: "https://api.tiles.mapbox.com/v4/"
-              "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
-          additionalOptions: {
-            'accessToken':
-                'pk.eyJ1IjoiaWdhdXJhYiIsImEiOiJjazFhOWlkN2QwYzA5M2RyNWFvenYzOTV0In0.lzjuSBZC6LcOy_oRENLKCg',
-            'id': 'mapbox.streets',
-          },
-        ),
-        MarkerLayerOptions(markers: markers),
-      ],
-      mapController: controller,
-    );
+    return Container();
   }
 }
