@@ -6,14 +6,13 @@
 
 A plugin for [FlutterMap](https://github.com/johnpryan/flutter_map)  package to handle and plot the current user location
 
-```html
+
 <div style="text-align: center"><table><tr>
   <td style="text-align: center">
   <a href="https://github.com/igaurab/UserLocationPlugin/blob/master/example.gif">
     <img src="https://github.com/igaurab/UserLocationPlugin/blob/master/example.gif" width="200"/></a>
 </td>
 </tr></table></div>
-```
 
 ## Usage
 
