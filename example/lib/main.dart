@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:flutter/services.dart';
 import 'package:user_location/user_location.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 
-// import 'package:flutter_map_user_location.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
