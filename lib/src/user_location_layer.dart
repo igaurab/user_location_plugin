@@ -35,18 +35,33 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
           _currentLocation = LatLng(onValue.latitude, onValue.longitude);
           print(_currentLocation);
         }
+
+        var height = 20.0 * (1 - (onValue.accuracy / 100));
+        var width = 20.0 * (1 - (onValue.accuracy / 100));
+
         widget.options.markers.clear();
         widget.options.markers.add(Marker(
-            height: 10.0,
-            width: 10.0,
             point:
                 LatLng(_currentLocation.latitude, _currentLocation.longitude),
             builder: (context) {
-              return Container(
-                height: 10.0,
-                width: 10.0,
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle, color: Colors.redAccent),
+              return Stack(
+                alignment: AlignmentDirectional.center,
+                children: <Widget>[
+                  Container(
+                    height: height,
+                    width: width,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.blue[300].withOpacity(0.7)),
+                  ),
+                  widget.options.markerWidget ??
+                      Container(
+                        height: 10,
+                        width: 10,
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle, color: Colors.blueAccent),
+                      )
+                ],
               );
             }));
 
