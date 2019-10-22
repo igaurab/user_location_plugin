@@ -41,7 +41,11 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
 
         var height = 20.0 * (1 - (onValue.accuracy / 100));
         var width = 20.0 * (1 - (onValue.accuracy / 100));
-
+        print(" The size of accuracy marker is $height");
+        if (height < 0 || width < 0) {
+          height = 20;
+          width = 20;
+        }
         widget.options.markers.clear();
         widget.options.markers.add(Marker(
             point:
@@ -69,18 +73,32 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
             }));
 
         widget.options.mapController.move(
-            LatLng(_currentLocation.latitude, _currentLocation.longitude),
+            LatLng(_currentLocation.latitude ?? LatLng(0, 0),
+                _currentLocation.longitude ?? LatLng(0, 0)),
             widget.map.zoom ?? 15);
       });
     });
   }
-  void _handleLocationChanges() {
-    LocationListener locationListener;
-    locationListener.onLocationStatusChanged().listen((onData) {
-      print("LOCATION STATUS: $onData");
-    });
 
+  void _handleLocationChanges() {
+    const EventChannel _stream = EventChannel('locationStatusStream');
+
+    bool _locationStatusChanged;
+    if (_locationStatusChanged == null) {
+      _stream.receiveBroadcastStream().listen((onData) {
+        _locationStatusChanged = onData;
+        print("DATA HAS ARRIVED $onData");
+        if (onData == false) {
+          var location = Location();
+          location.requestService();
+        }
+        if (onData == true) {
+          _subscribeToLocationChanges();
+        }
+      });
+    }
   }
+
   Widget build(BuildContext context) {
     return Container();
   }

@@ -1,5 +1,6 @@
 package com.example.user_location
 
+import android.content.Context
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -10,6 +11,7 @@ import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.EventChannel.EventSink
 import io.flutter.plugin.common.EventChannel.StreamHandler
 import android.location.LocationListener
+import android.location.LocationManager
 import android.os.Bundle
 
 
@@ -25,7 +27,7 @@ class UserLocationPlugin: MethodCallHandler {
      eventChannel.setStreamHandler(
             object: StreamHandler {
                 override fun onListen(p0: Any?, p1: EventSink) {
-                   object : LocationListener {
+                    val listener = object : LocationListener {
                         override fun onLocationChanged(location: android.location.Location) {
                         }
 
@@ -40,9 +42,14 @@ class UserLocationPlugin: MethodCallHandler {
                         override fun onProviderDisabled(provider: String) {
                             p1.success(false)
                         }
-                   }
-                }
+                    }
 
+                    val locationManager = registrar.activeContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                            2000,
+                            10f, listener)
+
+                }
                 override fun onCancel(p0: Any) {
                 }
             }
