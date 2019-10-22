@@ -1,20 +1,15 @@
 import 'package:flutter/services.dart';
 
 class LocationListener {
-  static const EventChannel _stream = const EventChannel('locationPermissionStream');
+  static const EventChannel _stream =
+      const EventChannel('locationStatusStream');
 
-  Stream<bool> _locationPermissionStatus;
   Stream<bool> _locationStatusChanged;
 
-  Stream<bool> onLocationPermissionChanged() {
-    if(_locationPermissionStatus == null) {
-
-    }
-  }
-
   Stream<bool> onLocationStatusChanged() {
-    if(_locationStatusChanged == null) {
-
+    if (_locationStatusChanged == null) {
+      _locationStatusChanged = _stream.receiveBroadcastStream();
     }
+    return _locationStatusChanged;
   }
 }

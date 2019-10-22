@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:user_location/src/user_location_options.dart';
 import 'package:latlong/latlong.dart';
 import 'package:location/location.dart';
+import 'package:user_location/utils/LocationListener.dart';
 
 class MapsPluginLayer extends StatefulWidget {
   final UserLocationOptions options;
@@ -22,6 +24,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
   @override
   void initState() {
     super.initState();
+    _handleLocationChanges();
     _subscribeToLocationChanges();
   }
 
@@ -71,8 +74,13 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
       });
     });
   }
+  void _handleLocationChanges() {
+    LocationListener locationListener;
+    locationListener.onLocationStatusChanged().listen((onData) {
+      print("LOCATION STATUS: $onData");
+    });
 
-  @override
+  }
   Widget build(BuildContext context) {
     return Container();
   }

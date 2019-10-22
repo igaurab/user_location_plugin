@@ -13,15 +13,41 @@ import android.location.LocationListener
 import android.os.Bundle
 
 
-class UserLocationPlugin: MethodCallHandler, LocationListener {
+class UserLocationPlugin: MethodCallHandler {
   companion object {
     @JvmStatic
     fun registerWith(registrar: Registrar) {
       val channel = MethodChannel(registrar.messenger(), "user_location")
       channel.setMethodCallHandler(UserLocationPlugin())
 
-      val eventChannel = EventChannel(registrar.messenger(),"locationPermissionStream")
-      eventChannel.setMethodCallHandler(UserLocationPlugin())
+      val eventChannel = EventChannel(registrar.messenger(), "locationStatusStream")
+
+     eventChannel.setStreamHandler(
+            object: StreamHandler {
+                override fun onListen(p0: Any?, p1: EventSink) {
+                   object : LocationListener {
+                        override fun onLocationChanged(location: android.location.Location) {
+                        }
+
+                        override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
+
+                        }
+
+                        override fun onProviderEnabled(provider: String) {
+                            p1.success(true)
+                        }
+
+                        override fun onProviderDisabled(provider: String) {
+                            p1.success(false)
+                        }
+                   }
+                }
+
+                override fun onCancel(p0: Any) {
+                }
+            }
+     )
+
 
     }
   }
@@ -30,33 +56,10 @@ class UserLocationPlugin: MethodCallHandler, LocationListener {
     if (call.method == "getPlatformVersion") {
       result.success("Android ${android.os.Build.VERSION.RELEASE}")
     } 
-    else if(call.method == "onLocationStatusChanged" ) {
-        subscribeToLocationProvider(result)
-    }
+
     else {
       result.notImplemented()
     }
   }
 
-  fun subscribeToLocationProvider(result: Result) {
-
-    val locationListenerGPS = object : LocationListener {
-      override fun onLocationChanged(location: android.location.Location) {
-        val latitude = location.latitude
-        val longitude = location.longitude
-      }
-
-      override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {
-
-      }
-
-      override fun onProviderEnabled(provider: String) {
-        result.success(true)
-      }
-
-      override fun onProviderDisabled(provider: String) {
-        result.success(false)
-      }
-    }
-  }
 }
