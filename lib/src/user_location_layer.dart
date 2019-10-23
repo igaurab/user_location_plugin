@@ -5,7 +5,7 @@ import 'package:flutter_map/plugin_api.dart';
 import 'package:user_location/src/user_location_options.dart';
 import 'package:latlong/latlong.dart';
 import 'package:location/location.dart';
-import 'package:user_location/utils/LocationListener.dart';
+import 'dart:async';
 
 class MapsPluginLayer extends StatefulWidget {
   final UserLocationOptions options;
@@ -31,6 +31,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
   void _subscribeToLocationChanges() {
     var location = Location();
     location.onLocationChanged().listen((onValue) {
+      _addsMarkerLocationToMarkerLocationStream(onValue);
       setState(() {
         if (onValue.latitude == null || onValue.longitude == null) {
           _currentLocation = LatLng(0, 0);
@@ -46,6 +47,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
           height = 20;
           width = 20;
         }
+
         widget.options.markers.clear();
         widget.options.markers.add(Marker(
             point:
@@ -87,7 +89,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
     if (_locationStatusChanged == null) {
       _stream.receiveBroadcastStream().listen((onData) {
         _locationStatusChanged = onData;
-        print("DATA HAS ARRIVED $onData");
+        print("LOCATION ACCESS IS NOW ${onData ? 'On' : 'Off'}");
         if (onData == false) {
           var location = Location();
           location.requestService();
@@ -96,6 +98,15 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
           _subscribeToLocationChanges();
         }
       });
+    }
+  }
+
+  _addsMarkerLocationToMarkerLocationStream(LocationData onValue) {
+    if (widget.options.markerlocationStream == null) {
+      print("Strem not provided");
+    } else {
+      widget.options.markerlocationStream.sink
+          .add(LatLng(onValue.latitude, onValue.longitude));
     }
   }
 

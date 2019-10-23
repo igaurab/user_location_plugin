@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:user_location/user_location.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -21,8 +23,14 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatelessWidget {
   MapController mapController = MapController();
   List<Marker> markers = [];
+  StreamController<LatLng> markerlocationStream = StreamController();
   @override
   Widget build(BuildContext context) {
+    //Get the current location of marker
+    markerlocationStream.stream.listen((onData) {
+      print(onData.latitude);
+    });
+
     return Scaffold(
         appBar: AppBar(title: Text("Plugin User Location")),
         body: FlutterMap(
@@ -45,12 +53,16 @@ class HomePage extends StatelessWidget {
             ),
             MarkerLayerOptions(markers: markers),
             UserLocationOptions(
-              context: context,
-              mapController: mapController,
-              markers: markers,
-            ),
+                context: context,
+                mapController: mapController,
+                markers: markers,
+                markerlocationStream: markerlocationStream),
           ],
           mapController: mapController,
         ));
+  }
+
+  void dispose() {
+    markerlocationStream.close();
   }
 }

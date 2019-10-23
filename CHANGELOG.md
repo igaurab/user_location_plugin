@@ -11,3 +11,9 @@
 * Added marker to show accuracy
 * Custom user marker widget
 * Removed unnecessary files
+
+## 0.0.4
+
+* Added Listener for location status of the phone
+* Provides current location of the marker
+* Minor bug fixes
