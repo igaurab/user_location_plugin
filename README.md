@@ -71,7 +71,7 @@ NSLocationAlwaysUsageDescription
 
 ### Demo Code 
 
-Add it in you FlutterMap. Make sure to pass the required options in the `UserLocationOptions` and marker in  `MarkerLayerOptions` 
+Add it in you FlutterMap. Make sure to pass the required options in the `UserLocationOptions` and marker in  `MarkerLayerOptions` also as of now you will need to pass seperate list of empty maker in the markers parameter. 
 
 ```dart
 import 'package:flutter/material.dart';
