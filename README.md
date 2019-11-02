@@ -122,7 +122,8 @@ class HomePage extends StatelessWidget {
             UserLocationOptions(
                 context: context,
                 mapController: mapController,
-                markers: markers),
+                markers: markers,
+                updateMapOnPositionChange: true),
           ],
           mapController: mapController,
         ));

@@ -74,10 +74,12 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
               );
             }));
 
-        widget.options.mapController.move(
-            LatLng(_currentLocation.latitude ?? LatLng(0, 0),
-                _currentLocation.longitude ?? LatLng(0, 0)),
-            widget.map.zoom ?? 15);
+        if (widget.options.updateMapOnPositionChange) {
+          widget.options.mapController.move(
+              LatLng(_currentLocation.latitude ?? LatLng(0, 0),
+                  _currentLocation.longitude ?? LatLng(0, 0)),
+              widget.map.zoom ?? 15);
+        }
       });
     });
   }

@@ -11,12 +11,16 @@ class UserLocationOptions extends LayerOptions {
   List<Marker> markers;
   Widget markerWidget;
   StreamController markerlocationStream;
-  UserLocationOptions(
-      {this.context,
-      this.mapController,
-      this.markers,
-      this.markerWidget,
-      this.markerlocationStream});
+  bool updateMapOnPositionChange = true;
+
+  UserLocationOptions({
+    this.context,
+    this.mapController,
+    this.markers,
+    this.markerWidget,
+    this.markerlocationStream,
+    this.updateMapOnPositionChange,
+  });
 
   void dispose() {
     markerlocationStream.close();
