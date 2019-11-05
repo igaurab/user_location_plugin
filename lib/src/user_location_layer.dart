@@ -74,7 +74,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
               );
             }));
 
-        if (widget.options.updateMapOnPositionChange) {
+        if (widget.options.updateMapLocationOnPositionChange) {
           widget.options.mapController.move(
               LatLng(_currentLocation.latitude ?? LatLng(0, 0),
                   _currentLocation.longitude ?? LatLng(0, 0)),
