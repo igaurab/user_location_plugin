@@ -57,7 +57,7 @@ class HomePage extends StatelessWidget {
               mapController: mapController,
               markers: markers,
               markerlocationStream: markerlocationStream,
-              updateMapOnPositionChange: false,
+              updateMapLocationOnPositionChange: true,
             ),
           ],
           mapController: mapController,
