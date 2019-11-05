@@ -123,7 +123,7 @@ class HomePage extends StatelessWidget {
                 context: context,
                 mapController: mapController,
                 markers: markers,
-                updateMapOnPositionChange: true),
+                updateMapLocationOnPositionChange: true),
           ],
           mapController: mapController,
         ));
