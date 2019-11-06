@@ -124,6 +124,11 @@ class HomePage extends StatelessWidget {
                 mapController: mapController,
                 markers: markers,
                 updateMapLocationOnPositionChange: true),
+            // Minimalist example:
+            // UserLocationOptions(
+            //   context: context,
+            //   markers: markers,
+            //   markerlocationStream: markerlocationStream),
           ],
           mapController: mapController,
         ));
