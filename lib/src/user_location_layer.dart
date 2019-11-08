@@ -74,10 +74,14 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
               );
             }));
 
-        widget.options.mapController.move(
-            LatLng(_currentLocation.latitude ?? LatLng(0, 0),
-                _currentLocation.longitude ?? LatLng(0, 0)),
-            widget.map.zoom ?? 15);
+        if (widget.options.updateMapLocationOnPositionChange && widget.options.mapController != null) {
+          widget.options.mapController.move(
+              LatLng(_currentLocation.latitude ?? LatLng(0, 0),
+                  _currentLocation.longitude ?? LatLng(0, 0)),
+              widget.map.zoom ?? 15);
+        } else if (widget.options.updateMapLocationOnPositionChange) {
+          print("Warning: updateMapLocationOnPositionChange set to true, but no mapController provided: can't move map");
+        }
       });
     });
   }
