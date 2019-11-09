@@ -53,12 +53,12 @@ class HomePage extends StatelessWidget {
             ),
             MarkerLayerOptions(markers: markers),
             UserLocationOptions(
-              context: context,
-              mapController: mapController,
-              markers: markers,
-              markerlocationStream: markerlocationStream,
-              updateMapLocationOnPositionChange: true,
-            ),
+                context: context,
+                mapController: mapController,
+                markers: markers,
+                markerlocationStream: markerlocationStream,
+                updateMapLocationOnPositionChange: false,
+                showMoveToCurrentLocationFloatingActionButton: true),
           ],
           mapController: mapController,
         ));

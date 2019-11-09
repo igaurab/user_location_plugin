@@ -7,20 +7,24 @@ import 'package:location/location.dart';
 
 class UserLocationOptions extends LayerOptions {
   BuildContext context;
-  MapController mapController;
   List<Marker> markers;
+  MapController mapController;
+
   Widget markerWidget;
   StreamController markerlocationStream;
   bool updateMapLocationOnPositionChange;
+  bool showMoveToCurrentLocationFloatingActionButton;
+  Widget moveToCurrentLocationFloatingActionButton;
 
-  UserLocationOptions({
-    @required this.context,
-    @required this.markers,
-    @required this.markerlocationStream,
-    this.markerWidget,
-    this.mapController,
-    this.updateMapLocationOnPositionChange: true,
-  });
+  UserLocationOptions(
+      {@required this.context,
+      @required this.markers,
+      this.mapController,
+      this.markerWidget,
+      this.markerlocationStream,
+      this.updateMapLocationOnPositionChange: true,
+      this.showMoveToCurrentLocationFloatingActionButton: true,
+      this.moveToCurrentLocationFloatingActionButton});
 
   void dispose() {
     markerlocationStream.close();

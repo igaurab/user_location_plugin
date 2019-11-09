@@ -123,12 +123,7 @@ class HomePage extends StatelessWidget {
                 context: context,
                 mapController: mapController,
                 markers: markers,
-                updateMapLocationOnPositionChange: true),
-            // Minimalist example:
-            // UserLocationOptions(
-            //   context: context,
-            //   markers: markers,
-            //   markerlocationStream: markerlocationStream),
+                ),
           ],
           mapController: mapController,
         ));
@@ -136,6 +131,26 @@ class HomePage extends StatelessWidget {
 }
 ```
 
+### Optional parameters
+* `markerWidget` overrides the default marker widget
+* `markerlocationStream` provides the current location of the marker
+* `updateMapLocationOnPositionChange` moves the map to the current location of the user if set to `true`
+* `showMoveToCurrentLocationFloatingActionButton` displays a floating action button at the bottom right of the screen which will redirect the user to their current location. This is useful if the above `updateMapLocationOnPositionChange` is set to `false`
+* `moveToCurrentLocationFloatingActionButton` is a widget when passed overrides the default floating action button. Default floating action button code: 
+``` 
+Container(
+    decoration: BoxDecoration(
+    color: Colors.blueAccent,
+    borderRadius: BorderRadius.circular(20.0),
+    boxShadow: [
+        BoxShadow(color: Colors.grey, blurRadius: 10.0)
+        ]),
+    child: Icon(
+        Icons.my_location,
+        color: Colors.white,
+    ),
+)
+```
 ### Run the example
 
 See the `example/` folder for a working example app.

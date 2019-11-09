@@ -42,7 +42,6 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
 
         var height = 20.0 * (1 - (onValue.accuracy / 100));
         var width = 20.0 * (1 - (onValue.accuracy / 100));
-        print(" The size of accuracy marker is $height");
         if (height < 0 || width < 0) {
           height = 20;
           width = 20;
@@ -74,16 +73,22 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
               );
             }));
 
-        if (widget.options.updateMapLocationOnPositionChange && widget.options.mapController != null) {
-          widget.options.mapController.move(
-              LatLng(_currentLocation.latitude ?? LatLng(0, 0),
-                  _currentLocation.longitude ?? LatLng(0, 0)),
-              widget.map.zoom ?? 15);
+        if (widget.options.updateMapLocationOnPositionChange &&
+            widget.options.mapController != null) {
+          _moveMapToCurrentLocation();
         } else if (widget.options.updateMapLocationOnPositionChange) {
-          print("Warning: updateMapLocationOnPositionChange set to true, but no mapController provided: can't move map");
+          print(
+              "Warning: updateMapLocationOnPositionChange set to true, but no mapController provided: can't move map");
         }
       });
     });
+  }
+
+  void _moveMapToCurrentLocation() {
+    widget.options.mapController.move(
+        LatLng(_currentLocation.latitude ?? LatLng(0, 0),
+            _currentLocation.longitude ?? LatLng(0, 0)),
+        widget.map.zoom ?? 15);
   }
 
   void _handleLocationChanges() {
@@ -93,7 +98,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
     if (_locationStatusChanged == null) {
       _stream.receiveBroadcastStream().listen((onData) {
         _locationStatusChanged = onData;
-        print("LOCATION ACCESS IS NOW ${onData ? 'On' : 'Off'}");
+        print("LOCATION ACCESS CHANGED: CURRENT-> ${onData ? 'On' : 'Off'}");
         if (onData == false) {
           var location = Location();
           location.requestService();
@@ -115,6 +120,34 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
   }
 
   Widget build(BuildContext context) {
-    return Container();
+    return widget.options.showMoveToCurrentLocationFloatingActionButton
+        ? Positioned(
+            bottom: 20.0,
+            right: 20.0,
+            height: 40.0,
+            width: 40.0,
+            child: InkWell(
+                hoverColor: Colors.blueAccent[200],
+                onTap: () {
+                  _moveMapToCurrentLocation();
+                },
+                child: widget.options
+                            .moveToCurrentLocationFloatingActionButton ==
+                        null
+                    ? Container(
+                        decoration: BoxDecoration(
+                            color: Colors.blueAccent,
+                            borderRadius: BorderRadius.circular(20.0),
+                            boxShadow: [
+                              BoxShadow(color: Colors.grey, blurRadius: 10.0)
+                            ]),
+                        child: Icon(
+                          Icons.my_location,
+                          color: Colors.white,
+                        ),
+                      )
+                    : widget.options.moveToCurrentLocationFloatingActionButton),
+          )
+        : Container();
   }
 }
