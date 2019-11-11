@@ -1,15 +1,10 @@
+## 0.0.1
 
-## 0.0.5
+* TODO: Describe initial release.
 
-* Made mapController optional
-* Added FloatingActionButton to redirect map to current location
-* Minor Fixes
+## 0.0.2
 
-## 0.0.4
-
-* Added Listener for location status of the phone
-* Provides current location of the marker
-* Minor bug fixes
+* Changed author email id
 
 ## 0.0.3
 
@@ -17,13 +12,8 @@
 * Custom user marker widget
 * Removed unnecessary files
 
-## 0.0.2
+## 0.0.4
 
-* Changed author email id
-
-## 0.0.1
-
-* TODO: Describe initial release.
-
-
-
+* Added Listener for location status of the phone
+* Provides current location of the marker
+* Minor bug fixes
