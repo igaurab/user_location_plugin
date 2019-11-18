@@ -69,9 +69,15 @@ NSLocationAlwaysUsageDescription
 
 * Note: I have not tested the plugin in ios
 
-### Demo Code 
+### Installation guide
 
-Add it in you FlutterMap. Make sure to pass the required options in the `UserLocationOptions` and marker in  `MarkerLayerOptions` also as of now you will need to pass seperate list of empty maker in the markers parameter. 
+- Declare and initialize ```  MapController mapController = MapController(); List<Marker> markers = [];```
+- Add ` UserLocationPlugin()` to plugins
+- Add  `MarkerLayerOptions` and `UserLocationOptions` in `layers`
+> While performing a location update, We remove and add the location marker on the map. Using a single list to hold this location marker along with other markers will unnecessarily also clear them. For that reason, we need to provide an empty marker array to hold the location marker. 
+ 
+
+### Sample code
 
 ```dart
 import 'package:flutter/material.dart';
@@ -95,7 +101,9 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
+  // ADD THIS
   MapController mapController = MapController();
+  // ADD THIS
   List<Marker> markers = [];
   @override
   Widget build(BuildContext context) {
@@ -106,6 +114,7 @@ class HomePage extends StatelessWidget {
             center: LatLng(0,0),
             zoom: 15.0,
             plugins: [
+             // ADD THIS
               UserLocationPlugin(),
             ],
           ),
@@ -118,18 +127,22 @@ class HomePage extends StatelessWidget {
                 'id': 'mapbox.streets',
               },
             ),
+            // ADD THIS
             MarkerLayerOptions(markers: markers),
+            // ADD THIS
             UserLocationOptions(
                 context: context,
                 mapController: mapController,
                 markers: markers,
                 ),
           ],
+          // ADD THIS
           mapController: mapController,
         ));
   }
 }
-```
+
+
 
 ### Optional parameters
 * `markerWidget` overrides the default marker widget
