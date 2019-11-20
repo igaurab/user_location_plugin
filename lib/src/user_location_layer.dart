@@ -20,6 +20,7 @@ class MapsPluginLayer extends StatefulWidget {
 
 class _MapsPluginLayerState extends State<MapsPluginLayer> {
   LatLng _currentLocation;
+  Marker _locationMarker;
 
   @override
   void initState() {
@@ -46,8 +47,12 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
           width = 20;
         }
 
-        widget.options.markers.clear();
-        widget.options.markers.add(Marker(
+         if (_locationMarker != null) {
+          widget.options.markers.remove(_locationMarker);
+        }
+        //widget.options.markers.clear();
+
+        _locationMarker = Marker(
             point:
                 LatLng(_currentLocation.latitude, _currentLocation.longitude),
             builder: (context) {
@@ -70,7 +75,9 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
                       )
                 ],
               );
-            }));
+            });
+
+        widget.options.markers.add(_locationMarker);
 
         if (widget.options.updateMapLocationOnPositionChange &&
             widget.options.mapController != null) {
