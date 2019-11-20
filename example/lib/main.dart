@@ -24,6 +24,7 @@ class HomePage extends StatelessWidget {
   MapController mapController = MapController();
   List<Marker> markers = [];
   StreamController<LatLng> markerlocationStream = StreamController();
+
   @override
   Widget build(BuildContext context) {
     //Get the current location of marker
@@ -56,8 +57,9 @@ class HomePage extends StatelessWidget {
                 context: context,
                 mapController: mapController,
                 markers: markers,
-                markerlocationStream: markerlocationStream,
-                updateMapLocationOnPositionChange: false,
+                onLocationUpdate: (LatLng pos) =>
+                    print("onLocationUpdate ${pos.toString()}"),
+                updateMapLocationOnPositionChange: true,
                 showMoveToCurrentLocationFloatingActionButton: true),
           ],
           mapController: mapController,

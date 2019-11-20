@@ -37,7 +37,6 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
           _currentLocation = LatLng(0, 0);
         } else {
           _currentLocation = LatLng(onValue.latitude, onValue.longitude);
-          print(_currentLocation);
         }
 
         var height = 20.0 * (1 - (onValue.accuracy / 100));
@@ -111,11 +110,10 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
   }
 
   _addsMarkerLocationToMarkerLocationStream(LocationData onValue) {
-    if (widget.options.markerlocationStream == null) {
+    if (widget.options.onLocationUpdate == null) {
       print("Strem not provided");
     } else {
-      widget.options.markerlocationStream.sink
-          .add(LatLng(onValue.latitude, onValue.longitude));
+      widget.options.onLocationUpdate(LatLng(onValue.latitude, onValue.longitude));
     }
   }
 

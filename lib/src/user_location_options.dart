@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong/latlong.dart';
-import 'dart:async';
-
-import 'package:location/location.dart';
 
 class UserLocationOptions extends LayerOptions {
   BuildContext context;
@@ -11,22 +8,19 @@ class UserLocationOptions extends LayerOptions {
   MapController mapController;
 
   Widget markerWidget;
-  StreamController markerlocationStream;
   bool updateMapLocationOnPositionChange;
   bool showMoveToCurrentLocationFloatingActionButton;
   Widget moveToCurrentLocationFloatingActionButton;
+  Function(LatLng) onLocationUpdate;
 
   UserLocationOptions(
       {@required this.context,
       @required this.markers,
       this.mapController,
       this.markerWidget,
-      this.markerlocationStream,
+      this.onLocationUpdate,
       this.updateMapLocationOnPositionChange: true,
       this.showMoveToCurrentLocationFloatingActionButton: true,
       this.moveToCurrentLocationFloatingActionButton});
 
-  void dispose() {
-    markerlocationStream.close();
-  }
 }
