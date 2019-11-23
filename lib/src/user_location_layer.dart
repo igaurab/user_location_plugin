@@ -24,12 +24,12 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
   @override
   void initState() {
     super.initState();
-    _handleLocationChanges();
     _subscribeToLocationChanges();
   }
 
   void _subscribeToLocationChanges() {
     var location = Location();
+    location.requestService();
     location.onLocationChanged().listen((onValue) {
       _addsMarkerLocationToMarkerLocationStream(onValue);
       setState(() {
@@ -74,35 +74,18 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
               );
             }));
 
-        if (widget.options.updateMapLocationOnPositionChange && widget.options.mapController != null) {
+        if (widget.options.updateMapLocationOnPositionChange &&
+            widget.options.mapController != null) {
           widget.options.mapController.move(
               LatLng(_currentLocation.latitude ?? LatLng(0, 0),
                   _currentLocation.longitude ?? LatLng(0, 0)),
               widget.map.zoom ?? 15);
         } else if (widget.options.updateMapLocationOnPositionChange) {
-          print("Warning: updateMapLocationOnPositionChange set to true, but no mapController provided: can't move map");
+          print(
+              "Warning: updateMapLocationOnPositionChange set to true, but no mapController provided: can't move map");
         }
       });
     });
-  }
-
-  void _handleLocationChanges() {
-    const EventChannel _stream = EventChannel('locationStatusStream');
-
-    bool _locationStatusChanged;
-    if (_locationStatusChanged == null) {
-      _stream.receiveBroadcastStream().listen((onData) {
-        _locationStatusChanged = onData;
-        print("LOCATION ACCESS IS NOW ${onData ? 'On' : 'Off'}");
-        if (onData == false) {
-          var location = Location();
-          location.requestService();
-        }
-        if (onData == true) {
-          _subscribeToLocationChanges();
-        }
-      });
-    }
   }
 
   _addsMarkerLocationToMarkerLocationStream(LocationData onValue) {
