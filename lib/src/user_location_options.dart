@@ -13,6 +13,8 @@ class UserLocationOptions extends LayerOptions {
   Widget moveToCurrentLocationFloatingActionButton;
   Function(LatLng) onLocationUpdate;
 
+  bool verbose;
+
   UserLocationOptions(
       {@required this.context,
       @required this.markers,
@@ -21,6 +23,6 @@ class UserLocationOptions extends LayerOptions {
       this.onLocationUpdate,
       this.updateMapLocationOnPositionChange: true,
       this.showMoveToCurrentLocationFloatingActionButton: true,
-      this.moveToCurrentLocationFloatingActionButton});
-
+      this.moveToCurrentLocationFloatingActionButton,
+      this.verbose: false});
 }

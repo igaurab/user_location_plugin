@@ -29,7 +29,7 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     //Get the current location of marker
     markerlocationStream.stream.listen((onData) {
-      print(onData.latitude);
+      // print(onData.latitude);
     });
 
     return Scaffold(
@@ -60,7 +60,8 @@ class HomePage extends StatelessWidget {
                 onLocationUpdate: (LatLng pos) =>
                     print("onLocationUpdate ${pos.toString()}"),
                 updateMapLocationOnPositionChange: true,
-                showMoveToCurrentLocationFloatingActionButton: true),
+                showMoveToCurrentLocationFloatingActionButton: true,
+                verbose: false),
           ],
           mapController: mapController,
         ));

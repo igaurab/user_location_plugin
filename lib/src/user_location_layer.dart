@@ -21,16 +21,53 @@ class MapsPluginLayer extends StatefulWidget {
 class _MapsPluginLayerState extends State<MapsPluginLayer> {
   LatLng _currentLocation;
   Marker _locationMarker;
+  EventChannel _stream = EventChannel('locationStatusStream');
+  var location = Location();
 
   @override
   void initState() {
     super.initState();
-    _handleLocationChanges();
-    _subscribeToLocationChanges();
+    initialize();
+  }
+
+  void initialize() {
+    location.hasPermission().then((onValue) async {
+      if (onValue == false) {
+        await location.requestPermission();
+        printLog("Request Permission Granted");
+        location.serviceEnabled().then((onValue) async {
+          if (onValue == false) {
+            await location.requestService();
+            _handleLocationChanges();
+            _subscribeToLocationChanges();
+          } else {
+            _handleLocationChanges();
+            _subscribeToLocationChanges();
+          }
+        });
+      } else {
+        location.serviceEnabled().then((onValue) async {
+          if (onValue == false) {
+            await location.requestService();
+            _handleLocationChanges();
+            _subscribeToLocationChanges();
+          } else {
+            _handleLocationChanges();
+            _subscribeToLocationChanges();
+          }
+        });
+      }
+    });
+  }
+
+  void printLog(String log) {
+    if (widget.options.verbose) {
+      print(log);
+    }
   }
 
   void _subscribeToLocationChanges() {
-    var location = Location();
+    printLog("OnSubscribe to location change");
     location.onLocationChanged().listen((onValue) {
       _addsMarkerLocationToMarkerLocationStream(onValue);
       setState(() {
@@ -47,7 +84,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
           width = 20;
         }
 
-         if (_locationMarker != null) {
+        if (_locationMarker != null) {
           widget.options.markers.remove(_locationMarker);
         }
         //widget.options.markers.clear();
@@ -83,7 +120,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
             widget.options.mapController != null) {
           _moveMapToCurrentLocation();
         } else if (widget.options.updateMapLocationOnPositionChange) {
-          print(
+          printLog(
               "Warning: updateMapLocationOnPositionChange set to true, but no mapController provided: can't move map");
         }
       });
@@ -98,13 +135,12 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
   }
 
   void _handleLocationChanges() {
-    const EventChannel _stream = EventChannel('locationStatusStream');
-
+    printLog(_stream.toString());
     bool _locationStatusChanged;
     if (_locationStatusChanged == null) {
       _stream.receiveBroadcastStream().listen((onData) {
         _locationStatusChanged = onData;
-        print("LOCATION ACCESS CHANGED: CURRENT-> ${onData ? 'On' : 'Off'}");
+        printLog("LOCATION ACCESS CHANGED: CURRENT-> ${onData ? 'On' : 'Off'}");
         if (onData == false) {
           var location = Location();
           location.requestService();
@@ -118,9 +154,10 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
 
   _addsMarkerLocationToMarkerLocationStream(LocationData onValue) {
     if (widget.options.onLocationUpdate == null) {
-      print("Strem not provided");
+      printLog("Strem not provided");
     } else {
-      widget.options.onLocationUpdate(LatLng(onValue.latitude, onValue.longitude));
+      widget.options
+          .onLocationUpdate(LatLng(onValue.latitude, onValue.longitude));
     }
   }
 
