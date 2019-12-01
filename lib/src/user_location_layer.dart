@@ -27,7 +27,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
     _subscribeToLocationChanges();
   }
 
-  void _subscribeToLocationChanges() {
+  Future<void> _subscribeToLocationChanges() async {
     var location = Location();
     if (await location.requestService()) {
       location.onLocationChanged().listen((onValue) {
