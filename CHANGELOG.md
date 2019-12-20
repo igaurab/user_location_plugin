@@ -1,4 +1,8 @@
 
+## 0.0.7
+
+* Upgraded the flutter map plugin to 0.80
+
 ## 0.0.5
 
 * Made mapController optional
