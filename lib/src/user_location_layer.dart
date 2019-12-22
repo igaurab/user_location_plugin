@@ -20,14 +20,54 @@ class MapsPluginLayer extends StatefulWidget {
 
 class _MapsPluginLayerState extends State<MapsPluginLayer> {
   LatLng _currentLocation;
+  Marker _locationMarker;
+  EventChannel _stream = EventChannel('locationStatusStream');
+  var location = Location();
 
   @override
   void initState() {
     super.initState();
-    _subscribeToLocationChanges();
+    initialize();
   }
 
-  Future<void> _subscribeToLocationChanges() async {
+  void initialize() {
+    location.hasPermission().then((onValue) async {
+      if (onValue == false) {
+        await location.requestPermission();
+        printLog("Request Permission Granted");
+        location.serviceEnabled().then((onValue) async {
+          if (onValue == false) {
+            await location.requestService();
+            _handleLocationChanges();
+            _subscribeToLocationChanges();
+          } else {
+            _handleLocationChanges();
+            _subscribeToLocationChanges();
+          }
+        });
+      } else {
+        location.serviceEnabled().then((onValue) async {
+          if (onValue == false) {
+            await location.requestService();
+            _handleLocationChanges();
+            _subscribeToLocationChanges();
+          } else {
+            _handleLocationChanges();
+            _subscribeToLocationChanges();
+          }
+        });
+      }
+    });
+  }
+
+  void printLog(String log) {
+    if (widget.options.verbose) {
+      print(log);
+    }
+  }
+
+  void _subscribeToLocationChanges() {
+    printLog("OnSubscribe to location change");
     var location = Location();
     if (await location.requestService()) {
       location.onLocationChanged().listen((onValue) {
@@ -37,19 +77,21 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
             _currentLocation = LatLng(0, 0);
           } else {
             _currentLocation = LatLng(onValue.latitude, onValue.longitude);
-            print(_currentLocation);
           }
-
+  
           var height = 20.0 * (1 - (onValue.accuracy / 100));
           var width = 20.0 * (1 - (onValue.accuracy / 100));
-          print(" The size of accuracy marker is $height");
           if (height < 0 || width < 0) {
             height = 20;
             width = 20;
           }
 
-          widget.options.markers.clear();
-          widget.options.markers.add(Marker(
+          if (_locationMarker != null) {
+            widget.options.markers.remove(_locationMarker);
+          }
+          //widget.options.markers.clear();
+
+          _locationMarker = Marker(
               point:
                   LatLng(_currentLocation.latitude, _currentLocation.longitude),
               builder: (context) {
@@ -72,16 +114,15 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
                         )
                   ],
                 );
-              }));
+              });
+  
+          widget.options.markers.add(_locationMarker);
 
           if (widget.options.updateMapLocationOnPositionChange &&
               widget.options.mapController != null) {
-            widget.options.mapController.move(
-                LatLng(_currentLocation.latitude ?? LatLng(0, 0),
-                    _currentLocation.longitude ?? LatLng(0, 0)),
-                widget.map.zoom ?? 15);
+            _moveMapToCurrentLocation();
           } else if (widget.options.updateMapLocationOnPositionChange) {
-            print(
+            printLog(
                 "Warning: updateMapLocationOnPositionChange set to true, but no mapController provided: can't move map");
           }
         });
@@ -89,16 +130,69 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
     }
   }
 
+  void _moveMapToCurrentLocation() {
+    widget.options.mapController.move(
+        LatLng(_currentLocation.latitude ?? LatLng(0, 0),
+            _currentLocation.longitude ?? LatLng(0, 0)),
+        widget.map.zoom ?? 15);
+  }
+
+  void _handleLocationChanges() {
+    printLog(_stream.toString());
+    bool _locationStatusChanged;
+    if (_locationStatusChanged == null) {
+      _stream.receiveBroadcastStream().listen((onData) {
+        _locationStatusChanged = onData;
+        printLog("LOCATION ACCESS CHANGED: CURRENT-> ${onData ? 'On' : 'Off'}");
+        if (onData == false) {
+          var location = Location();
+          location.requestService();
+        }
+        if (onData == true) {
+          _subscribeToLocationChanges();
+        }
+      });
+    }
+  }
+
   _addsMarkerLocationToMarkerLocationStream(LocationData onValue) {
-    if (widget.options.markerlocationStream == null) {
-      print("Strem not provided");
+    if (widget.options.onLocationUpdate == null) {
+      printLog("Strem not provided");
     } else {
-      widget.options.markerlocationStream.sink
-          .add(LatLng(onValue.latitude, onValue.longitude));
+      widget.options
+          .onLocationUpdate(LatLng(onValue.latitude, onValue.longitude));
     }
   }
 
   Widget build(BuildContext context) {
-    return Container();
+    return widget.options.showMoveToCurrentLocationFloatingActionButton
+        ? Positioned(
+            bottom: 20.0,
+            right: 20.0,
+            height: 40.0,
+            width: 40.0,
+            child: InkWell(
+                hoverColor: Colors.blueAccent[200],
+                onTap: () {
+                  _moveMapToCurrentLocation();
+                },
+                child: widget.options
+                            .moveToCurrentLocationFloatingActionButton ==
+                        null
+                    ? Container(
+                        decoration: BoxDecoration(
+                            color: Colors.blueAccent,
+                            borderRadius: BorderRadius.circular(20.0),
+                            boxShadow: [
+                              BoxShadow(color: Colors.grey, blurRadius: 10.0)
+                            ]),
+                        child: Icon(
+                          Icons.my_location,
+                          color: Colors.white,
+                        ),
+                      )
+                    : widget.options.moveToCurrentLocationFloatingActionButton),
+          )
+        : Container();
   }
 }

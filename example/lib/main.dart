@@ -24,11 +24,12 @@ class HomePage extends StatelessWidget {
   MapController mapController = MapController();
   List<Marker> markers = [];
   StreamController<LatLng> markerlocationStream = StreamController();
+
   @override
   Widget build(BuildContext context) {
     //Get the current location of marker
     markerlocationStream.stream.listen((onData) {
-      print(onData.latitude);
+      // print(onData.latitude);
     });
 
     return Scaffold(
@@ -53,12 +54,14 @@ class HomePage extends StatelessWidget {
             ),
             MarkerLayerOptions(markers: markers),
             UserLocationOptions(
-              context: context,
-              mapController: mapController,
-              markers: markers,
-              markerlocationStream: markerlocationStream,
-              updateMapLocationOnPositionChange: true,
-            ),
+                context: context,
+                mapController: mapController,
+                markers: markers,
+                onLocationUpdate: (LatLng pos) =>
+                    print("onLocationUpdate ${pos.toString()}"),
+                updateMapLocationOnPositionChange: true,
+                showMoveToCurrentLocationFloatingActionButton: true,
+                verbose: false),
           ],
           mapController: mapController,
         ));
