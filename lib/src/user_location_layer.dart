@@ -68,63 +68,66 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
 
   void _subscribeToLocationChanges() {
     printLog("OnSubscribe to location change");
-    location.onLocationChanged().listen((onValue) {
-      _addsMarkerLocationToMarkerLocationStream(onValue);
-      setState(() {
-        if (onValue.latitude == null || onValue.longitude == null) {
-          _currentLocation = LatLng(0, 0);
-        } else {
-          _currentLocation = LatLng(onValue.latitude, onValue.longitude);
-        }
+    var location = Location();
+    if (await location.requestService()) {
+      location.onLocationChanged().listen((onValue) {
+        _addsMarkerLocationToMarkerLocationStream(onValue);
+        setState(() {
+          if (onValue.latitude == null || onValue.longitude == null) {
+            _currentLocation = LatLng(0, 0);
+          } else {
+            _currentLocation = LatLng(onValue.latitude, onValue.longitude);
+          }
+  
+          var height = 20.0 * (1 - (onValue.accuracy / 100));
+          var width = 20.0 * (1 - (onValue.accuracy / 100));
+          if (height < 0 || width < 0) {
+            height = 20;
+            width = 20;
+          }
 
-        var height = 20.0 * (1 - (onValue.accuracy / 100));
-        var width = 20.0 * (1 - (onValue.accuracy / 100));
-        if (height < 0 || width < 0) {
-          height = 20;
-          width = 20;
-        }
+          if (_locationMarker != null) {
+            widget.options.markers.remove(_locationMarker);
+          }
+          //widget.options.markers.clear();
 
-        if (_locationMarker != null) {
-          widget.options.markers.remove(_locationMarker);
-        }
-        //widget.options.markers.clear();
+          _locationMarker = Marker(
+              point:
+                  LatLng(_currentLocation.latitude, _currentLocation.longitude),
+              builder: (context) {
+                return Stack(
+                  alignment: AlignmentDirectional.center,
+                  children: <Widget>[
+                    Container(
+                      height: height,
+                      width: width,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.blue[300].withOpacity(0.7)),
+                    ),
+                    widget.options.markerWidget ??
+                        Container(
+                          height: 10,
+                          width: 10,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.blueAccent),
+                        )
+                  ],
+                );
+              });
+  
+          widget.options.markers.add(_locationMarker);
 
-        _locationMarker = Marker(
-            point:
-                LatLng(_currentLocation.latitude, _currentLocation.longitude),
-            builder: (context) {
-              return Stack(
-                alignment: AlignmentDirectional.center,
-                children: <Widget>[
-                  Container(
-                    height: height,
-                    width: width,
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.blue[300].withOpacity(0.7)),
-                  ),
-                  widget.options.markerWidget ??
-                      Container(
-                        height: 10,
-                        width: 10,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle, color: Colors.blueAccent),
-                      )
-                ],
-              );
-            });
-
-        widget.options.markers.add(_locationMarker);
-
-        if (widget.options.updateMapLocationOnPositionChange &&
-            widget.options.mapController != null) {
-          _moveMapToCurrentLocation();
-        } else if (widget.options.updateMapLocationOnPositionChange) {
-          printLog(
-              "Warning: updateMapLocationOnPositionChange set to true, but no mapController provided: can't move map");
-        }
+          if (widget.options.updateMapLocationOnPositionChange &&
+              widget.options.mapController != null) {
+            _moveMapToCurrentLocation();
+          } else if (widget.options.updateMapLocationOnPositionChange) {
+            printLog(
+                "Warning: updateMapLocationOnPositionChange set to true, but no mapController provided: can't move map");
+          }
+        });
       });
-    });
+    }
   }
 
   void _moveMapToCurrentLocation() {
