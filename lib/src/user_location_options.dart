@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:latlong/latlong.dart';
+import 'package:location/location.dart';
 
 class UserLocationOptions extends LayerOptions {
   BuildContext context;
@@ -13,6 +14,11 @@ class UserLocationOptions extends LayerOptions {
   Widget moveToCurrentLocationFloatingActionButton;
   Function(LatLng) onLocationUpdate;
 
+  double fabBottom;
+  double fabRight;
+  double fabHeight;
+  double fabWidth;
+
   bool verbose;
 
   UserLocationOptions(
@@ -24,5 +30,9 @@ class UserLocationOptions extends LayerOptions {
       this.updateMapLocationOnPositionChange: true,
       this.showMoveToCurrentLocationFloatingActionButton: true,
       this.moveToCurrentLocationFloatingActionButton,
-      this.verbose: false});
+      this.verbose: false,
+      this.fabBottom: 20,
+      this.fabHeight: 40,
+      this.fabRight: 20,
+      this.fabWidth: 40});
 }

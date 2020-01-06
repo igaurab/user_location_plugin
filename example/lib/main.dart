@@ -33,38 +33,41 @@ class HomePage extends StatelessWidget {
     });
 
     return Scaffold(
-        appBar: AppBar(title: Text("Plugin User Location")),
-        body: FlutterMap(
-          options: MapOptions(
-            center: LatLng(27.7172, 85.3240),
-            zoom: 15.0,
-            plugins: [
-              UserLocationPlugin(),
-            ],
-          ),
-          layers: [
-            TileLayerOptions(
-              urlTemplate: "https://api.tiles.mapbox.com/v4/"
-                  "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
-              additionalOptions: {
-                'accessToken':
-                    'pk.eyJ1IjoiaWdhdXJhYiIsImEiOiJjazFhOWlkN2QwYzA5M2RyNWFvenYzOTV0In0.lzjuSBZC6LcOy_oRENLKCg',
-                'id': 'mapbox.streets',
-              },
-            ),
-            MarkerLayerOptions(markers: markers),
-            UserLocationOptions(
-                context: context,
-                mapController: mapController,
-                markers: markers,
-                onLocationUpdate: (LatLng pos) =>
-                    print("onLocationUpdate ${pos.toString()}"),
-                updateMapLocationOnPositionChange: true,
-                showMoveToCurrentLocationFloatingActionButton: true,
-                verbose: false),
+      appBar: AppBar(title: Text("Plugin User Location")),
+      body: FlutterMap(
+        options: MapOptions(
+          center: LatLng(27.7172, 85.3240),
+          zoom: 15.0,
+          plugins: [
+            UserLocationPlugin(),
           ],
-          mapController: mapController,
-        ));
+        ),
+        layers: [
+          TileLayerOptions(
+            urlTemplate: "https://api.tiles.mapbox.com/v4/"
+                "{id}/{z}/{x}/{y}@2x.png?access_token={accessToken}",
+            additionalOptions: {
+              'accessToken':
+                  'pk.eyJ1IjoiaWdhdXJhYiIsImEiOiJjazFhOWlkN2QwYzA5M2RyNWFvenYzOTV0In0.lzjuSBZC6LcOy_oRENLKCg',
+              'id': 'mapbox.streets',
+            },
+          ),
+          MarkerLayerOptions(markers: markers),
+          UserLocationOptions(
+              context: context,
+              mapController: mapController,
+              markers: markers,
+              onLocationUpdate: (LatLng pos) =>
+                  print("onLocationUpdate ${pos.toString()}"),
+              updateMapLocationOnPositionChange: true,
+              showMoveToCurrentLocationFloatingActionButton: true,
+              fabBottom: 50,
+              fabRight: 50,
+              verbose: false),
+        ],
+        mapController: mapController,
+      ),
+    );
   }
 
   void dispose() {

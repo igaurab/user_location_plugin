@@ -18,7 +18,8 @@ class MapsPluginLayer extends StatefulWidget {
   _MapsPluginLayerState createState() => _MapsPluginLayerState();
 }
 
-class _MapsPluginLayerState extends State<MapsPluginLayer> {
+class _MapsPluginLayerState extends State<MapsPluginLayer>
+    with TickerProviderStateMixin {
   LatLng _currentLocation;
   Marker _locationMarker;
   EventChannel _stream = EventChannel('locationStatusStream');
@@ -128,10 +129,16 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
   }
 
   void _moveMapToCurrentLocation() {
-    widget.options.mapController.move(
+    animatedMapMove(
         LatLng(_currentLocation.latitude ?? LatLng(0, 0),
             _currentLocation.longitude ?? LatLng(0, 0)),
-        widget.map.zoom ?? 15);
+        widget.map.zoom ?? 15,
+        widget.options.mapController,
+        this);
+    // widget.options.mapController.move(
+    //     LatLng(_currentLocation.latitude ?? LatLng(0, 0),
+    //         _currentLocation.longitude ?? LatLng(0, 0)),
+    //     widget.map.zoom ?? 15);
   }
 
   void _handleLocationChanges() {
@@ -164,13 +171,14 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
   Widget build(BuildContext context) {
     return widget.options.showMoveToCurrentLocationFloatingActionButton
         ? Positioned(
-            bottom: 20.0,
-            right: 20.0,
-            height: 40.0,
-            width: 40.0,
+            bottom: widget.options.fabBottom,
+            right: widget.options.fabRight,
+            height: widget.options.fabHeight,
+            width: widget.options.fabWidth,
             child: InkWell(
                 hoverColor: Colors.blueAccent[200],
                 onTap: () {
+                  initialize();
                   _moveMapToCurrentLocation();
                 },
                 child: widget.options
@@ -191,5 +199,40 @@ class _MapsPluginLayerState extends State<MapsPluginLayer> {
                     : widget.options.moveToCurrentLocationFloatingActionButton),
           )
         : Container();
+  }
+
+  void animatedMapMove(
+      LatLng destLocation, double destZoom, _mapController, vsync) {
+    // Create some tweens. These serve to split up the transition from one location to another.
+    // In our case, we want to split the transition be<tween> our current map center and the destination.
+    final _latTween = Tween<double>(
+        begin: _mapController.center.latitude, end: destLocation.latitude);
+    final _lngTween = Tween<double>(
+        begin: _mapController.center.longitude, end: destLocation.longitude);
+    final _zoomTween = Tween<double>(begin: _mapController.zoom, end: destZoom);
+
+    // Create a animation controller that has a duration and a TickerProvider.
+    var controller = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: vsync);
+    // The animation determines what path the animation will take. You can try different Curves values, although I found
+    // fastOutSlowIn to be my favorite.
+    Animation<double> animation =
+        CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
+
+    controller.addListener(() {
+      _mapController.move(
+          LatLng(_latTween.evaluate(animation), _lngTween.evaluate(animation)),
+          _zoomTween.evaluate(animation));
+    });
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.dispose();
+      } else if (status == AnimationStatus.dismissed) {
+        controller.dispose();
+      }
+    });
+
+    controller.forward();
   }
 }
