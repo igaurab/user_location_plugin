@@ -24,11 +24,18 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
   Marker _locationMarker;
   EventChannel _stream = EventChannel('locationStatusStream');
   var location = Location();
+  StreamSubscription<LocationData> _onLocationChangedStreamSubscription;
 
   @override
   void initState() {
     super.initState();
     initialize();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _onLocationChangedStreamSubscription.cancel();
   }
 
   void initialize() {
@@ -71,7 +78,8 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
     printLog("OnSubscribe to location change");
     var location = Location();
     if (await location.requestService()) {
-      location.onLocationChanged().listen((onValue) {
+      _onLocationChangedStreamSubscription =
+          location.onLocationChanged().listen((onValue) {
         _addsMarkerLocationToMarkerLocationStream(onValue);
         setState(() {
           if (onValue.latitude == null || onValue.longitude == null) {
@@ -79,7 +87,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
           } else {
             _currentLocation = LatLng(onValue.latitude, onValue.longitude);
           }
-  
+
           var height = 20.0 * (1 - (onValue.accuracy / 100));
           var width = 20.0 * (1 - (onValue.accuracy / 100));
           if (height < 0 || width < 0) {
@@ -116,7 +124,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                   ],
                 );
               });
-  
+
           widget.options.markers.add(_locationMarker);
 
           if (widget.options.updateMapLocationOnPositionChange &&
