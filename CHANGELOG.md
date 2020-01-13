@@ -1,3 +1,7 @@
+## 0.0.9
+
+* adds zoom options to MapController
+* FAB when clicked zooms to current location
 
 ## 0.0.7
 
