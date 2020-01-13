@@ -11,6 +11,7 @@ class UserLocationOptions extends LayerOptions {
   Widget markerWidget;
   bool updateMapLocationOnPositionChange;
   bool showMoveToCurrentLocationFloatingActionButton;
+  bool zoomToCurrentLocationOnLoad;
   Widget moveToCurrentLocationFloatingActionButton;
   Function(LatLng) onLocationUpdate;
 
@@ -20,6 +21,7 @@ class UserLocationOptions extends LayerOptions {
   double fabWidth;
 
   bool verbose;
+  double defaultZoom;
 
   UserLocationOptions(
       {@required this.context,
@@ -34,5 +36,7 @@ class UserLocationOptions extends LayerOptions {
       this.fabBottom: 20,
       this.fabHeight: 40,
       this.fabRight: 20,
-      this.fabWidth: 40});
+      this.fabWidth: 40,
+      this.defaultZoom: 15,
+      this.zoomToCurrentLocationOnLoad: false});
 }

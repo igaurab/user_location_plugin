@@ -61,6 +61,7 @@ class HomePage extends StatelessWidget {
                   print("onLocationUpdate ${pos.toString()}"),
               updateMapLocationOnPositionChange: true,
               showMoveToCurrentLocationFloatingActionButton: true,
+              zoomToCurrentLocationOnLoad: true,
               fabBottom: 50,
               fabRight: 50,
               verbose: false),

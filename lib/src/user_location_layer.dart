@@ -24,10 +24,14 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
   Marker _locationMarker;
   EventChannel _stream = EventChannel('locationStatusStream');
   var location = Location();
+  bool mapLoaded;
 
   @override
   void initState() {
     super.initState();
+    setState(() {
+      mapLoaded = false;
+    });
     initialize();
   }
 
@@ -79,7 +83,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
           } else {
             _currentLocation = LatLng(onValue.latitude, onValue.longitude);
           }
-  
+
           var height = 20.0 * (1 - (onValue.accuracy / 100));
           var width = 20.0 * (1 - (onValue.accuracy / 100));
           if (height < 0 || width < 0) {
@@ -116,7 +120,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                   ],
                 );
               });
-  
+
           widget.options.markers.add(_locationMarker);
 
           if (widget.options.updateMapLocationOnPositionChange &&
@@ -125,6 +129,14 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
           } else if (widget.options.updateMapLocationOnPositionChange) {
             printLog(
                 "Warning: updateMapLocationOnPositionChange set to true, but no mapController provided: can't move map");
+          }
+
+          if (widget.options.zoomToCurrentLocationOnLoad && (!mapLoaded)) {
+            setState(() {
+              mapLoaded = true;
+            });
+            animatedMapMove(
+                _currentLocation, 17, widget.options.mapController, this);
           }
         });
       });
@@ -182,7 +194,10 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                 hoverColor: Colors.blueAccent[200],
                 onTap: () {
                   initialize();
-                  _moveMapToCurrentLocation();
+                  widget.options.mapController.move(
+                    _currentLocation,
+                    17.0,
+                  );
                 },
                 child: widget.options
                             .moveToCurrentLocationFloatingActionButton ==
