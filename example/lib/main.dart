@@ -64,7 +64,7 @@ class HomePage extends StatelessWidget {
               zoomToCurrentLocationOnLoad: true,
               fabBottom: 50,
               fabRight: 50,
-              verbose: false),
+              verbose: true),
         ],
         mapController: mapController,
       ),
