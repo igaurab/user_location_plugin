@@ -25,10 +25,13 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
   EventChannel _stream = EventChannel('locationStatusStream');
   var location = Location();
   bool mapLoaded;
+  bool initialStateOfupdateMapLocationOnPositionChange;
 
   @override
   void initState() {
     super.initState();
+    initialStateOfupdateMapLocationOnPositionChange =
+        widget.options.updateMapLocationOnPositionChange;
     setState(() {
       mapLoaded = false;
     });
@@ -127,6 +130,9 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
               widget.options.mapController != null) {
             _moveMapToCurrentLocation();
           } else if (widget.options.updateMapLocationOnPositionChange) {
+            if (!widget.options.updateMapLocationOnPositionChange) {
+              widget.map.fitBounds(widget.map.bounds, FitBoundsOptions());
+            }
             printLog(
                 "Warning: updateMapLocationOnPositionChange set to true, but no mapController provided: can't move map");
           }
@@ -143,11 +149,11 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
     }
   }
 
-  void _moveMapToCurrentLocation() {
+  void _moveMapToCurrentLocation({double zoom}) {
     animatedMapMove(
         LatLng(_currentLocation.latitude ?? LatLng(0, 0),
             _currentLocation.longitude ?? LatLng(0, 0)),
-        widget.map.zoom ?? 15,
+        zoom ?? widget.map.zoom ?? 15,
         widget.options.mapController,
         this);
     // widget.options.mapController.move(
@@ -194,10 +200,12 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                 hoverColor: Colors.blueAccent[200],
                 onTap: () {
                   initialize();
-                  widget.options.mapController.move(
-                    _currentLocation,
-                    17.0,
-                  );
+                  if (initialStateOfupdateMapLocationOnPositionChange) {
+                    setState(() {
+                      widget.options.updateMapLocationOnPositionChange = false;
+                    });
+                  }
+                  _moveMapToCurrentLocation(zoom: 17.0);
                 },
                 child: widget.options
                             .moveToCurrentLocationFloatingActionButton ==
@@ -245,12 +253,22 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
 
     animation.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
+        if (initialStateOfupdateMapLocationOnPositionChange) {
+          setState(() {
+            widget.options.updateMapLocationOnPositionChange = true;
+          });
+        }
+
         controller.dispose();
       } else if (status == AnimationStatus.dismissed) {
+        if (initialStateOfupdateMapLocationOnPositionChange) {
+          setState(() {
+            widget.options.updateMapLocationOnPositionChange = true;
+          });
+        }
         controller.dispose();
       }
     });
-
     controller.forward();
   }
 }
