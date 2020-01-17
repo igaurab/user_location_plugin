@@ -28,14 +28,17 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
   bool mapLoaded;
   bool initialStateOfupdateMapLocationOnPositionChange;
 
+
   StreamSubscription<LocationData> _onLocationChangedStreamSubscription;
 
 
   @override
   void initState() {
     super.initState();
+    
     initialStateOfupdateMapLocationOnPositionChange =
         widget.options.updateMapLocationOnPositionChange;
+
     setState(() {
       mapLoaded = false;
     });
