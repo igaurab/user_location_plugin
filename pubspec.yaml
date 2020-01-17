@@ -1,6 +1,6 @@
 name: user_location
 description: A plugin for FlutterMap to handle and plot the current user location. 
-version: 0.0.9
+version: 0.1.0
 author: Gaurab Panthee <gaurab.panthee@gmail.com>
 homepage: https://github.com/igaurab/UserLocationPlugin
 
@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   location: ^2.3.5
-  flutter_map: ^0.8.0
+  flutter_map: ^0.8.2
   latlong: ^0.6.1
 
 dev_dependencies:
