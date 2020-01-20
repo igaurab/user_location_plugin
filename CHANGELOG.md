@@ -1,3 +1,9 @@
+## 0.1.0
+
+* Upgraded flutter map to v8.0.2
+* Fix map zoom issue #26
+* Upgraded README.md
+
 ## 0.0.9
 
 * adds zoom options to MapController

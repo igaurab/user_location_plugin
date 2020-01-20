@@ -24,13 +24,29 @@ class HomePage extends StatelessWidget {
   MapController mapController = MapController();
   List<Marker> markers = [];
   StreamController<LatLng> markerlocationStream = StreamController();
-
+  UserLocationOptions userLocationOptions;
   @override
   Widget build(BuildContext context) {
     //Get the current location of marker
     markerlocationStream.stream.listen((onData) {
       // print(onData.latitude);
     });
+
+    userLocationOptions = UserLocationOptions(
+        context: context,
+        mapController: mapController,
+        markers: markers,
+        onLocationUpdate: (LatLng pos) =>
+            print("onLocationUpdate ${pos.toString()}"),
+        updateMapLocationOnPositionChange: true,
+        showMoveToCurrentLocationFloatingActionButton: true,
+        zoomToCurrentLocationOnLoad: false,
+        fabBottom: 50,
+        fabRight: 50,
+        verbose: false);
+
+    //You can also change the value of updateMapLocationOnPositionChange programatically in runtime.
+    //userLocationOptions.updateMapLocationOnPositionChange = false;
 
     return Scaffold(
       appBar: AppBar(title: Text("Plugin User Location")),
@@ -53,18 +69,7 @@ class HomePage extends StatelessWidget {
             },
           ),
           MarkerLayerOptions(markers: markers),
-          UserLocationOptions(
-              context: context,
-              mapController: mapController,
-              markers: markers,
-              onLocationUpdate: (LatLng pos) =>
-                  print("onLocationUpdate ${pos.toString()}"),
-              updateMapLocationOnPositionChange: true,
-              showMoveToCurrentLocationFloatingActionButton: true,
-              zoomToCurrentLocationOnLoad: true,
-              fabBottom: 50,
-              fabRight: 50,
-              verbose: true),
+          userLocationOptions
         ],
         mapController: mapController,
       ),
