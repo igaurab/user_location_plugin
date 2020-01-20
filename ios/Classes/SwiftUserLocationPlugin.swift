@@ -18,7 +18,7 @@ public class SwiftUserLocationPlugin: NSObject, FlutterPlugin {
     }
 }
 
-class LocationStreamHandler: NSObject, FlutterStreamHandler, CLLocationManagerDelegate {
+class LocationStreamHandler: NSObject, FlutterStreamHandler {
     
     private var _eventSink: FlutterEventSink?
     
@@ -32,3 +32,4 @@ class LocationStreamHandler: NSObject, FlutterStreamHandler, CLLocationManagerDe
         return nil
     }
 }
+
