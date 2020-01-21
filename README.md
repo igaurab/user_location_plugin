@@ -160,7 +160,7 @@ class HomePage extends StatelessWidget {
 
 ### Optional parameters
 * `markerWidget` overrides the default marker widget
-* `markerlocationStream` provides the current location of the marker
+* `onLocationChange` is a callback function to get the current location of user. It's uses is defined in the example program.
 * `updateMapLocationOnPositionChange` moves the map to the current location of the user if set to `true`
 * `showMoveToCurrentLocationFloatingActionButton` displays a floating action button at the bottom right of the screen which will redirect the user to their current location. You can also pass your own widget as FAB and control the position using options `fabBottom` and `fabRight` options.
 * `moveToCurrentLocationFloatingActionButton` is a widget when passed overrides the default floating action button. Default floating action button code: 
