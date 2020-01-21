@@ -2,6 +2,8 @@ name: user_location_example
 description: Demonstrates how to use the user_location plugin.
 publish_to: 'none'
 
+version: 1.0.0
+
 environment:
   sdk: ">=2.1.0 <3.0.0"
 
