@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:user_location/src/user_location_options.dart';
 import 'package:latlong/latlong.dart';
 import 'package:location/location.dart';
 import 'dart:async';
+import 'dart:math' as math;
+import "dart:math" show pi;
 
 class MapsPluginLayer extends StatefulWidget {
   final UserLocationOptions options;
@@ -27,7 +30,9 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
 
   bool mapLoaded;
   bool initialStateOfupdateMapLocationOnPositionChange;
-
+  
+  double _direction;
+  
   StreamSubscription<LocationData> _onLocationChangedStreamSubscription;
 
   @override
@@ -36,6 +41,12 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
 
     initialStateOfupdateMapLocationOnPositionChange =
         widget.options.updateMapLocationOnPositionChange;
+
+    FlutterCompass.events.listen((double direction) {
+      setState(() {
+        _direction = direction;
+      });
+    });
 
     setState(() {
       mapLoaded = false;
@@ -111,28 +122,53 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
           }
           //widget.options.markers.clear();
 
+          print("Direction : "+(_direction ?? 0).toString());
+
           _locationMarker = Marker(
+            height: 60.0,
+              width: 60.0,
               point:
                   LatLng(_currentLocation.latitude, _currentLocation.longitude),
               builder: (context) {
-                return Stack(
-                  alignment: AlignmentDirectional.center,
-                  children: <Widget>[
-                    Container(
-                      height: height,
-                      width: width,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.blue[300].withOpacity(0.7)),
-                    ),
-                    widget.options.markerWidget ??
-                        Container(
-                          height: 10,
-                          width: 10,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle, color: Colors.blueAccent),
-                        )
-                  ],
+                return Container(
+                  child: Column(
+                    children: <Widget>[
+                      Stack(
+                        alignment: AlignmentDirectional.center,
+                        children: <Widget>[
+                          (_direction == null) ?SizedBox():ClipOval(
+                            child: Container(
+                              child: new Transform.rotate(
+                                  angle: ((_direction ?? 0) * (math.pi / 180) *-2)+180,
+                                  child: Container(
+                                    child: CustomPaint(
+                                      size: Size(60.0, 60.0),
+                                      painter: MyDirectionPainter(),
+                                    ),
+                                  )),
+                            ),
+                          ),
+                          Container(
+                            height: 20.0,
+                            width: 20.0,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.blue[300].withOpacity(0.7)),
+                          ),
+                          widget.options.markerWidget ??
+                              Container(
+                                height: 10,
+                                width: 10,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle, color: Colors.blueAccent),
+                              ),
+
+
+                        ],
+                      ),
+
+                    ],
+                  ),
                 );
               });
 
@@ -289,5 +325,44 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
       }
     });
     controller.forward();
+  }
+}
+
+class MyDirectionPainter extends CustomPainter {
+
+  @override
+  void paint(Canvas canvas, Size size) {
+
+      // create a bounding square, based on the centre and radius of the arc
+      Rect rect = new Rect.fromCircle(
+        center: new Offset(30.0, 30.0),
+        radius: 40.0,
+      );
+
+      // a fancy rainbow gradient
+      final Gradient gradient = new RadialGradient(
+        colors: <Color>[
+          Colors.blue.shade500.withOpacity(0.6),
+          Colors.blue.shade500.withOpacity(0.3),
+          Colors.blue.shade500.withOpacity(0.1),
+        ],
+        stops: [
+          0.0,
+          0.5,
+          1.0,
+        ],
+      );
+
+      // create the Shader from the gradient and the bounding square
+      final Paint paint = new Paint()..shader = gradient.createShader(rect);
+
+      // and draw an arc
+      canvas.drawArc(rect, pi / 5, pi * 3 / 5, true, paint);
+
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
   }
 }
