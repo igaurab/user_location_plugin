@@ -28,14 +28,12 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
   bool mapLoaded;
   bool initialStateOfupdateMapLocationOnPositionChange;
 
-
   StreamSubscription<LocationData> _onLocationChangedStreamSubscription;
-
 
   @override
   void initState() {
     super.initState();
-    
+
     initialStateOfupdateMapLocationOnPositionChange =
         widget.options.updateMapLocationOnPositionChange;
 
@@ -149,6 +147,13 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
             }
             printLog(
                 "Warning: updateMapLocationOnPositionChange set to true, but no mapController provided: can't move map");
+          } else {
+            var zoom = widget.options.mapController.zoom;
+            widget.options.mapController.move(
+                widget.options.mapController.center,
+                widget.options.mapController.zoom + 0.000001);
+            widget.options.mapController
+                .move(widget.options.mapController.center, zoom);
           }
 
           if (widget.options.zoomToCurrentLocationOnLoad && (!mapLoaded)) {

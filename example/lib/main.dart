@@ -38,7 +38,7 @@ class HomePage extends StatelessWidget {
         markers: markers,
         onLocationUpdate: (LatLng pos) =>
             print("onLocationUpdate ${pos.toString()}"),
-        updateMapLocationOnPositionChange: true,
+        updateMapLocationOnPositionChange: false,
         showMoveToCurrentLocationFloatingActionButton: true,
         zoomToCurrentLocationOnLoad: false,
         fabBottom: 50,
