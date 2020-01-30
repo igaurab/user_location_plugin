@@ -84,8 +84,7 @@ If you would like to access the device's location when your App is running in th
 - Declare and initialize ```  MapController mapController = MapController(); List<Marker> markers = [];```
 - Add ` UserLocationPlugin()` to plugins
 - Add  `MarkerLayerOptions` and `UserLocationOptions` in `layers`
-> While performing a location update, We remove and add the location marker on the map. Using a single list to hold this location marker along with other markers will unnecessarily also clear them. For that reason, we need to provide an empty marker array to hold the location marker. 
- 
+
 
 ### Sample code
 
@@ -163,6 +162,8 @@ class HomePage extends StatelessWidget {
 * `onLocationChange` is a callback function to get the current location of user. It's uses is defined in the example program.
 * `updateMapLocationOnPositionChange` moves the map to the current location of the user if set to `true`
 * `showMoveToCurrentLocationFloatingActionButton` displays a floating action button at the bottom right of the screen which will redirect the user to their current location. You can also pass your own widget as FAB and control the position using options `fabBottom` and `fabRight` options.
+* `showHeading` is used to control whether or not to show heading in the marker widget
+* `zoomToCurrentLocationOnLoad` if true, zooms to the current location of the user with a zoom factor 17
 * `moveToCurrentLocationFloatingActionButton` is a widget when passed overrides the default floating action button. Default floating action button code: 
 ``` 
 Container(
