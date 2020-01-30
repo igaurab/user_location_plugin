@@ -1,3 +1,8 @@
+## 0.1.1
+
+* Fixes #10
+* Adds user direction head(Fixes #18)
+
 ## 0.1.0
 
 * Upgraded flutter map to v8.0.2

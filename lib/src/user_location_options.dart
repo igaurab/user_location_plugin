@@ -21,6 +21,8 @@ class UserLocationOptions extends LayerOptions {
   double fabWidth;
 
   bool verbose;
+  bool showHeading;
+
   double defaultZoom;
 
   UserLocationOptions(
@@ -38,5 +40,6 @@ class UserLocationOptions extends LayerOptions {
       this.fabRight: 20,
       this.fabWidth: 40,
       this.defaultZoom: 15,
-      this.zoomToCurrentLocationOnLoad: false});
+      this.zoomToCurrentLocationOnLoad: false,
+      this.showHeading: true});
 }
