@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_map/plugin_api.dart';
 import 'package:user_location/src/user_location_options.dart';
 import 'package:latlong/latlong.dart';
 import 'package:location/location.dart';
 import 'dart:async';
+import 'dart:math' as math;
 
 class MapsPluginLayer extends StatefulWidget {
   final UserLocationOptions options;
@@ -28,6 +30,8 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
   bool mapLoaded;
   bool initialStateOfupdateMapLocationOnPositionChange;
 
+  double _direction;
+
 
   StreamSubscription<LocationData> _onLocationChangedStreamSubscription;
 
@@ -38,6 +42,12 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
     
     initialStateOfupdateMapLocationOnPositionChange =
         widget.options.updateMapLocationOnPositionChange;
+
+    FlutterCompass.events.listen((double direction) {
+      setState(() {
+        _direction = direction;
+      });
+    });
 
     setState(() {
       mapLoaded = false;
@@ -120,6 +130,16 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                 return Stack(
                   alignment: AlignmentDirectional.center,
                   children: <Widget>[
+                    Container(
+                      alignment: Alignment.center,
+                      color: Colors.white,
+                      child: new Transform.rotate(
+                        angle: ((_direction ?? 0) * (math.pi / 180) * -1),
+                        child: CustomPaint(
+                          size: Size(200, 100),
+                          painter: MyDirectionPainter(),
+                        )),
+                    ),
                     Container(
                       height: height,
                       width: width,
@@ -284,5 +304,28 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
       }
     });
     controller.forward();
+  }
+}
+
+class MyDirectionPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    // TODO: implement paint
+    final paint = Paint();
+    // set the paint color to be white
+    paint.color = Colors.white;
+    // Create a rectangle with size and width same as the canvas
+    var rect = Rect.fromLTWH(0, 0, size.width, size.height);
+    // draw the rectangle using the paint
+    canvas.drawRect(rect, paint);
+    paint.color = Colors.yellow;
+    // create a path
+
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    // TODO: implement shouldRepaint
+    return false;
   }
 }
