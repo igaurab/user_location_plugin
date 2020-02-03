@@ -33,17 +33,21 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
 
   double _direction;
 
-
   StreamSubscription<LocationData> _onLocationChangedStreamSubscription;
   StreamSubscription<double> _compassStreamSubscription;
-
 
   @override
   void initState() {
     super.initState();
-    
+
     initialStateOfupdateMapLocationOnPositionChange =
         widget.options.updateMapLocationOnPositionChange;
+
+    FlutterCompass.events.listen((double direction) {
+      setState(() {
+        _direction = direction;
+      });
+    });
 
     setState(() {
       mapLoaded = false;
@@ -126,6 +130,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
 
           _locationMarker = Marker(
             height: 60.0,
+
               width: 60.0,
               point:
                   LatLng(_currentLocation.latitude, _currentLocation.longitude),
@@ -148,6 +153,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                                   )),
                             ),
                           ),
+
                           Container(
                             height: 20.0,
                             width: 20.0,
@@ -166,7 +172,6 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
 
                         ],
                       ),
-
                     ],
                   ),
                 );
@@ -183,6 +188,13 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
             }
             printLog(
                 "Warning: updateMapLocationOnPositionChange set to true, but no mapController provided: can't move map");
+          } else {
+            var zoom = widget.options.mapController.zoom;
+            widget.options.mapController.move(
+                widget.options.mapController.center,
+                widget.options.mapController.zoom + 0.000001);
+            widget.options.mapController
+                .move(widget.options.mapController.center, zoom);
           }
 
           if (widget.options.zoomToCurrentLocationOnLoad && (!mapLoaded)) {
@@ -333,7 +345,6 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
 }
 
 class MyDirectionPainter extends CustomPainter {
-
   @override
   void paint(Canvas canvas, Size size) {
 
@@ -362,7 +373,6 @@ class MyDirectionPainter extends CustomPainter {
 
       // and draw an arc
       canvas.drawArc(rect, pi / 5, pi * 3 / 5, true, paint);
-
   }
 
   @override
