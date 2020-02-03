@@ -35,6 +35,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
 
 
   StreamSubscription<LocationData> _onLocationChangedStreamSubscription;
+  StreamSubscription<double> _compassStreamSubscription;
 
 
   @override
@@ -43,12 +44,6 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
     
     initialStateOfupdateMapLocationOnPositionChange =
         widget.options.updateMapLocationOnPositionChange;
-
-    FlutterCompass.events.listen((double direction) {
-      setState(() {
-        _direction = direction;
-      });
-    });
 
     setState(() {
       mapLoaded = false;
@@ -60,6 +55,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
   void dispose() {
     super.dispose();
     _onLocationChangedStreamSubscription.cancel();
+    _compassStreamSubscription.cancel();
   }
 
   void initialize() {
@@ -89,6 +85,8 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
           }
         });
       }
+
+      _handleCompassDirection();
     });
   }
 
@@ -229,6 +227,17 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
       });
     }
   }
+
+
+  void _handleCompassDirection(){
+    _compassStreamSubscription = FlutterCompass.events.listen((double direction) {
+      setState(() {
+        _direction = direction;
+
+      });
+    });
+  }
+
 
   _addsMarkerLocationToMarkerLocationStream(LocationData onValue) {
     if (widget.options.onLocationUpdate == null) {
