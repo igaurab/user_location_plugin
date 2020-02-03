@@ -43,12 +43,6 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
     initialStateOfupdateMapLocationOnPositionChange =
         widget.options.updateMapLocationOnPositionChange;
 
-    FlutterCompass.events.listen((double direction) {
-      setState(() {
-        _direction = direction;
-      });
-    });
-
     setState(() {
       mapLoaded = false;
     });
