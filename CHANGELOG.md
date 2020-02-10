@@ -1,3 +1,7 @@
+## 0.1.2
+
+* Disposes compass stream #34
+
 ## 0.1.1
 
 * Fixes #10
