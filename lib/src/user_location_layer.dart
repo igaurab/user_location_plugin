@@ -120,11 +120,10 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
           }
           //widget.options.markers.clear();
 
-          print("Direction : "+(_direction ?? 0).toString());
+          print("Direction : " + (_direction ?? 0).toString());
 
           _locationMarker = Marker(
-            height: 60.0,
-
+              height: 60.0,
               width: 60.0,
               point:
                   LatLng(_currentLocation.latitude, _currentLocation.longitude),
@@ -135,19 +134,23 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                       Stack(
                         alignment: AlignmentDirectional.center,
                         children: <Widget>[
-                          (_direction == null) ?SizedBox():ClipOval(
-                            child: Container(
-                              child: new Transform.rotate(
-                                  angle: ((_direction ?? 0) * (math.pi / 180) *-2)+180,
+                          (_direction == null)
+                              ? SizedBox()
+                              : ClipOval(
                                   child: Container(
-                                    child: CustomPaint(
-                                      size: Size(60.0, 60.0),
-                                      painter: MyDirectionPainter(),
-                                    ),
-                                  )),
-                            ),
-                          ),
-
+                                    child: new Transform.rotate(
+                                        angle: ((_direction ?? 0) *
+                                                (math.pi / 180) *
+                                                -2) +
+                                            180,
+                                        child: Container(
+                                          child: CustomPaint(
+                                            size: Size(60.0, 60.0),
+                                            painter: MyDirectionPainter(),
+                                          ),
+                                        )),
+                                  ),
+                                ),
                           Container(
                             height: 20.0,
                             width: 20.0,
@@ -160,10 +163,9 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                                 height: 10,
                                 width: 10,
                                 decoration: BoxDecoration(
-                                    shape: BoxShape.circle, color: Colors.blueAccent),
+                                    shape: BoxShape.circle,
+                                    color: Colors.blueAccent),
                               ),
-
-
                         ],
                       ),
                     ],
@@ -183,12 +185,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
             printLog(
                 "Warning: updateMapLocationOnPositionChange set to true, but no mapController provided: can't move map");
           } else {
-            var zoom = widget.options.mapController.zoom;
-            widget.options.mapController.move(
-                widget.options.mapController.center,
-                widget.options.mapController.zoom + 0.000001);
-            widget.options.mapController
-                .move(widget.options.mapController.center, zoom);
+            forceMapUpdate();
           }
 
           if (widget.options.zoomToCurrentLocationOnLoad && (!mapLoaded)) {
@@ -234,16 +231,15 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
     }
   }
 
-
-  void _handleCompassDirection(){
-    _compassStreamSubscription = FlutterCompass.events.listen((double direction) {
+  void _handleCompassDirection() {
+    _compassStreamSubscription =
+        FlutterCompass.events.listen((double direction) {
       setState(() {
         _direction = direction;
-
       });
+      forceMapUpdate();
     });
   }
-
 
   _addsMarkerLocationToMarkerLocationStream(LocationData onValue) {
     if (widget.options.onLocationUpdate == null) {
@@ -336,37 +332,44 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
     });
     controller.forward();
   }
+
+  void forceMapUpdate() {
+    var zoom = widget.options.mapController.zoom;
+    widget.options.mapController.move(widget.options.mapController.center,
+        widget.options.mapController.zoom + 0.000001);
+    widget.options.mapController
+        .move(widget.options.mapController.center, zoom);
+  }
 }
 
 class MyDirectionPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
+    // create a bounding square, based on the centre and radius of the arc
+    Rect rect = new Rect.fromCircle(
+      center: new Offset(30.0, 30.0),
+      radius: 40.0,
+    );
 
-      // create a bounding square, based on the centre and radius of the arc
-      Rect rect = new Rect.fromCircle(
-        center: new Offset(30.0, 30.0),
-        radius: 40.0,
-      );
+    // a fancy rainbow gradient
+    final Gradient gradient = new RadialGradient(
+      colors: <Color>[
+        Colors.blue.shade500.withOpacity(0.6),
+        Colors.blue.shade500.withOpacity(0.3),
+        Colors.blue.shade500.withOpacity(0.1),
+      ],
+      stops: [
+        0.0,
+        0.5,
+        1.0,
+      ],
+    );
 
-      // a fancy rainbow gradient
-      final Gradient gradient = new RadialGradient(
-        colors: <Color>[
-          Colors.blue.shade500.withOpacity(0.6),
-          Colors.blue.shade500.withOpacity(0.3),
-          Colors.blue.shade500.withOpacity(0.1),
-        ],
-        stops: [
-          0.0,
-          0.5,
-          1.0,
-        ],
-      );
+    // create the Shader from the gradient and the bounding square
+    final Paint paint = new Paint()..shader = gradient.createShader(rect);
 
-      // create the Shader from the gradient and the bounding square
-      final Paint paint = new Paint()..shader = gradient.createShader(rect);
-
-      // and draw an arc
-      canvas.drawArc(rect, pi / 5, pi * 3 / 5, true, paint);
+    // and draw an arc
+    canvas.drawArc(rect, pi / 5, pi * 3 / 5, true, paint);
   }
 
   @override
