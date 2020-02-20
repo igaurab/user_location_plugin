@@ -156,7 +156,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                             width: 20.0,
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.blue[300].withOpacity(0.7)),
+                                color: Colors.yellow[300].withOpacity(0.7)),
                           ),
                           widget.options.markerWidget ??
                               Container(
@@ -164,7 +164,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                                 width: 10,
                                 decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Colors.blueAccent),
+                                    color: Colors.yellowAccent),
                               ),
                         ],
                       ),
