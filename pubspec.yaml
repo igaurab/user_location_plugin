@@ -11,7 +11,10 @@ dependencies:
   flutter:
     sdk: flutter
   location: ^2.3.5
-  flutter_map: ^0.8.2
+  flutter_map:
+    git:
+      url: git@github.com:nishontan/flutter_map.git
+      ref: master
   latlong: ^0.6.1
   flutter_compass: ^0.3.4
 
