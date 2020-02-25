@@ -120,7 +120,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
           }
           //widget.options.markers.clear();
 
-          print("Direction : " + (_direction ?? 0).toString());
+          printLog("Direction : " + (_direction ?? 0).toString());
 
           _locationMarker = Marker(
               height: 60.0,
