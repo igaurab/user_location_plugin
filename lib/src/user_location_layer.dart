@@ -243,7 +243,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
 
   _addsMarkerLocationToMarkerLocationStream(LocationData onValue) {
     if (widget.options.onLocationUpdate == null) {
-      printLog("Strem not provided");
+      printLog("Stream not provided");
     } else {
       widget.options
           .onLocationUpdate(LatLng(onValue.latitude, onValue.longitude));
