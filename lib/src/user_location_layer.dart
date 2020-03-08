@@ -260,7 +260,6 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
             child: InkWell(
                 hoverColor: Colors.blueAccent[200],
                 onTap: () {
-                  initialize();
                   if (initialStateOfupdateMapLocationOnPositionChange) {
                     setState(() {
                       widget.options.updateMapLocationOnPositionChange = false;
