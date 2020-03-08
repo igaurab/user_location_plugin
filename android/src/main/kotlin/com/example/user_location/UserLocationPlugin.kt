@@ -50,7 +50,7 @@ class UserLocationPlugin: MethodCallHandler {
                             10f, listener)
 
                 }
-                override fun onCancel(p0: Any) {
+                override fun onCancel(p0: Any?) {
                 }
             }
      )
