@@ -63,33 +63,17 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
   }
 
   void initialize() {
-    location.hasPermission().then((onValue) async {
-      if (onValue == false) {
+    location.hasPermission().then((status) async {
+      if (status != PermissionStatus.GRANTED) {
         await location.requestPermission();
-        printLog("Request Permission Granted");
-        location.serviceEnabled().then((onValue) async {
-          if (onValue == false) {
+        location.serviceEnabled().then((enabled) async {
+          if (!enabled) {
             await location.requestService();
-            _handleLocationChanges();
-            _subscribeToLocationChanges();
-          } else {
-            _handleLocationChanges();
-            _subscribeToLocationChanges();
-          }
-        });
-      } else {
-        location.serviceEnabled().then((onValue) async {
-          if (onValue == false) {
-            await location.requestService();
-            _handleLocationChanges();
-            _subscribeToLocationChanges();
-          } else {
-            _handleLocationChanges();
-            _subscribeToLocationChanges();
           }
         });
       }
-
+      _handleLocationChanges();
+      _subscribeToLocationChanges();
       _handleCompassDirection();
     });
   }
