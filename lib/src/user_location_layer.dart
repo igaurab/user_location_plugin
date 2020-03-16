@@ -201,16 +201,18 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
   }
 
   void _moveMapToCurrentLocation({double zoom}) {
-    animatedMapMove(
-        LatLng(_currentLocation.latitude ?? LatLng(0, 0),
-            _currentLocation.longitude ?? LatLng(0, 0)),
-        zoom ?? widget.map.zoom ?? 15,
-        widget.options.mapController,
-        this);
-    // widget.options.mapController.move(
-    //     LatLng(_currentLocation.latitude ?? LatLng(0, 0),
-    //         _currentLocation.longitude ?? LatLng(0, 0)),
-    //     widget.map.zoom ?? 15);
+    if (_currentLocation != null) {
+      animatedMapMove(
+          LatLng(_currentLocation.latitude ?? LatLng(0, 0),
+              _currentLocation.longitude ?? LatLng(0, 0)),
+          zoom ?? widget.map.zoom ?? 15,
+          widget.options.mapController,
+          this);
+      // widget.options.mapController.move(
+      //     LatLng(_currentLocation.latitude ?? LatLng(0, 0),
+      //         _currentLocation.longitude ?? LatLng(0, 0)),
+      //     widget.map.zoom ?? 15);
+    }
   }
 
   void _handleLocationChanges() {
@@ -243,7 +245,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
 
   _addsMarkerLocationToMarkerLocationStream(LocationData onValue) {
     if (widget.options.onLocationUpdate == null) {
-      printLog("Strem not provided");
+      printLog("Stream not provided");
     } else {
       widget.options
           .onLocationUpdate(LatLng(onValue.latitude, onValue.longitude));
@@ -260,7 +262,6 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
             child: InkWell(
                 hoverColor: Colors.blueAccent[200],
                 onTap: () {
-                  initialize();
                   if (initialStateOfupdateMapLocationOnPositionChange) {
                     setState(() {
                       widget.options.updateMapLocationOnPositionChange = false;
