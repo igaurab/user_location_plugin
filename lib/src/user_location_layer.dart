@@ -52,38 +52,28 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
   @override
   void dispose() {
     super.dispose();
-    _onLocationChangedStreamSubscription.cancel();
-    _compassStreamSubscription.cancel();
+    _cancel(_onLocationChangedStreamSubscription);
+    _cancel(_compassStreamSubscription);
+  }
+
+  void _cancel(StreamSubscription streamSubscription) {
+    if (streamSubscription != null) {
+      streamSubscription.cancel();
+    }
   }
 
   void initialize() {
-    location.hasPermission().then((onValue) async {
-      if (onValue == false) {
+    location.hasPermission().then((status) async {
+      if (status != PermissionStatus.GRANTED) {
         await location.requestPermission();
-        printLog("Request Permission Granted");
-        location.serviceEnabled().then((onValue) async {
-          if (onValue == false) {
+        location.serviceEnabled().then((enabled) async {
+          if (!enabled) {
             await location.requestService();
-            _handleLocationChanges();
-            _subscribeToLocationChanges();
-          } else {
-            _handleLocationChanges();
-            _subscribeToLocationChanges();
-          }
-        });
-      } else {
-        location.serviceEnabled().then((onValue) async {
-          if (onValue == false) {
-            await location.requestService();
-            _handleLocationChanges();
-            _subscribeToLocationChanges();
-          } else {
-            _handleLocationChanges();
-            _subscribeToLocationChanges();
           }
         });
       }
-
+      _handleLocationChanges();
+      _subscribeToLocationChanges();
       _handleCompassDirection();
     });
   }
