@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_map/plugin_api.dart';
+import 'package:user_location/src/user_location_marker.dart';
 import 'package:user_location/src/user_location_options.dart';
 import 'package:latlong/latlong.dart';
 import 'package:location/location.dart';
@@ -24,7 +25,7 @@ class MapsPluginLayer extends StatefulWidget {
 class _MapsPluginLayerState extends State<MapsPluginLayer>
     with TickerProviderStateMixin {
   LatLng _currentLocation;
-  Marker _locationMarker;
+  UserLocationMarker _locationMarker;
   EventChannel _stream = EventChannel('locationStatusStream');
   var location = Location();
 
@@ -112,7 +113,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
 
           printLog("Direction : " + (_direction ?? 0).toString());
 
-          _locationMarker = Marker(
+          _locationMarker = UserLocationMarker(
               height: 60.0,
               width: 60.0,
               point:
