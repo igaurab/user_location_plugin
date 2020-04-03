@@ -243,6 +243,11 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
   }
 
   Widget build(BuildContext context) {
+    if (_locationMarker != null &&
+        !widget.options.markers.contains(_locationMarker)) {
+      widget.options.markers.add(_locationMarker);
+    }
+
     return widget.options.showMoveToCurrentLocationFloatingActionButton
         ? Positioned(
             bottom: widget.options.fabBottom,
