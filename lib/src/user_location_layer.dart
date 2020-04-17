@@ -65,7 +65,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
 
   void initialize() {
     location.hasPermission().then((status) async {
-      if (status != PermissionStatus.GRANTED) {
+      if (status != PermissionStatus.granted) {
         await location.requestPermission();
         location.serviceEnabled().then((enabled) async {
           if (!enabled) {
@@ -90,7 +90,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
     var location = Location();
     if (await location.requestService()) {
       _onLocationChangedStreamSubscription =
-          location.onLocationChanged().listen((onValue) {
+          location.onLocationChanged.listen((onValue) {
         _addsMarkerLocationToMarkerLocationStream(onValue);
         setState(() {
           if (onValue.latitude == null || onValue.longitude == null) {
