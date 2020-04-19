@@ -184,7 +184,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
               mapLoaded = true;
             });
             animatedMapMove(
-                _currentLocation, 17, widget.options.mapController, this);
+                _currentLocation, widget.options.defaultZoom, widget.options.mapController, this);
           }
         });
       });
@@ -263,7 +263,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                       widget.options.updateMapLocationOnPositionChange = false;
                     });
                   }
-                  _moveMapToCurrentLocation(zoom: 17.0);
+                  _moveMapToCurrentLocation(zoom: widget.options.defaultZoom);
                 },
                 child: widget.options
                             .moveToCurrentLocationFloatingActionButton ==
