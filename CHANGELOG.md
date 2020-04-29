@@ -1,3 +1,9 @@
+## 0.1.3
+
+* Upgraded location lib to ^3.0.0 ;supports web platform #53
+* Fixes location marker disappearing #39
+* Minor bug fixes
+
 ## 0.1.2
 
 * Disposes compass stream #34
