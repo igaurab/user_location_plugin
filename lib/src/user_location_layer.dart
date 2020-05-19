@@ -63,21 +63,46 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
     }
   }
 
-  void initialize() {
-    location.hasPermission().then((status) async {
-      if (status != PermissionStatus.granted) {
-        await location.requestPermission();
-        location.serviceEnabled().then((enabled) async {
-          if (!enabled) {
-            await location.requestService();
-          }
-        });
+    void initialize() async{
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
       }
-      _handleLocationChanges();
-      _subscribeToLocationChanges();
-      _handleCompassDirection();
-    });
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    _handleLocationChanges();
+    _subscribeToLocationChanges();
+    _handleCompassDirection();
   }
+
+  // void initialize() {
+  //   location.hasPermission().then((status) async {
+  //     if (status != PermissionStatus.granted) {
+  //       await location.requestPermission();
+  //       location.serviceEnabled().then((enabled) async {
+  //         if (!enabled) {
+  //           await location.requestService();
+  //         }
+  //       });
+  //     }
+  //     _handleLocationChanges();
+  //     _subscribeToLocationChanges();
+  //     _handleCompassDirection();
+  //   });
+  // }
 
   void printLog(String log) {
     if (widget.options.verbose) {
