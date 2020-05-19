@@ -63,7 +63,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
     }
   }
 
-    void initialize() async{
+  void initialize() async {
     bool _serviceEnabled;
     PermissionStatus _permissionGranted;
 
@@ -208,8 +208,8 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
             setState(() {
               mapLoaded = true;
             });
-            animatedMapMove(
-                _currentLocation, widget.options.defaultZoom, widget.options.mapController, this);
+            animatedMapMove(_currentLocation, widget.options.defaultZoom,
+                widget.options.mapController, this);
           }
         });
       });
@@ -288,6 +288,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                       widget.options.updateMapLocationOnPositionChange = false;
                     });
                   }
+                  initialize();
                   _moveMapToCurrentLocation(zoom: widget.options.defaultZoom);
                 },
                 child: widget.options
