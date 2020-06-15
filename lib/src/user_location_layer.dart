@@ -156,7 +156,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                                   child: Container(
                                     child: new Transform.rotate(
                                       // This particular value seems to work
-                                        angle: (((_direction * -1) ?? 0) * (math.pi / 180) * -1) + 180,
+                                        angle: (((_direction * -1) ?? 0) * (math.pi / 180) * -1) + 160,
                                         child: Container(
                                           child: CustomPaint(
                                             size: Size(60.0, 60.0),
