@@ -21,7 +21,9 @@ Add flutter_map and  user_location to your pubspec.yaml :
 ```yaml
 dependencies:
   flutter_map: any
-  user_location: any # or the latest version on Pub
+  user_location:
+    git:
+      url: https://github.com/igaurab/user_location_plugin.git
 ```
 
 
