@@ -25,6 +25,12 @@ class HomePage extends StatelessWidget {
   List<Marker> markers = [];
   StreamController<LatLng> markerlocationStream = StreamController();
   UserLocationOptions userLocationOptions;
+
+  onTapFAB() {
+    print('Callback function has been called');
+    //userLocationOptions.updateMapLocationOnPositionChange = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     //Get the current location of marker
@@ -43,7 +49,8 @@ class HomePage extends StatelessWidget {
         zoomToCurrentLocationOnLoad: false,
         fabBottom: 50,
         fabRight: 50,
-        verbose: false);
+        verbose: false,
+        onTapFAB: onTapFAB);
 
     //You can also change the value of updateMapLocationOnPositionChange programatically in runtime.
     //userLocationOptions.updateMapLocationOnPositionChange = false;

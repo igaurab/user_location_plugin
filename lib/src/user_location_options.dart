@@ -12,7 +12,9 @@ class UserLocationOptions extends LayerOptions {
   bool showMoveToCurrentLocationFloatingActionButton;
   bool zoomToCurrentLocationOnLoad;
   Widget moveToCurrentLocationFloatingActionButton;
+
   Function(LatLng) onLocationUpdate;
+  Function() onTapFAB;
 
   double fabBottom;
   double fabRight;
@@ -30,6 +32,7 @@ class UserLocationOptions extends LayerOptions {
       this.mapController,
       this.markerWidget,
       this.onLocationUpdate,
+      this.onTapFAB,
       this.updateMapLocationOnPositionChange: true,
       this.showMoveToCurrentLocationFloatingActionButton: true,
       this.moveToCurrentLocationFloatingActionButton,
