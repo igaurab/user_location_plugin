@@ -25,6 +25,10 @@ class UserLocationOptions extends LayerOptions {
   bool showHeading;
 
   double defaultZoom;
+  // If false the location update stream is paused if the app is in the
+  // background (app lifecycle state inactive and paused). Once the app is
+  // resumed the stream is resumed as well.
+  bool locationUpdateInBackground;
 
   UserLocationOptions(
       {@required this.context,
@@ -43,5 +47,6 @@ class UserLocationOptions extends LayerOptions {
       this.fabWidth: 40,
       this.defaultZoom: 15,
       this.zoomToCurrentLocationOnLoad: false,
-      this.showHeading: true});
+      this.showHeading: true,
+      this.locationUpdateInBackground: true});
 }
