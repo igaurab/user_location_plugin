@@ -50,7 +50,8 @@ class HomePage extends StatelessWidget {
         fabBottom: 50,
         fabRight: 50,
         verbose: false,
-        onTapFAB: onTapFAB);
+        onTapFAB: onTapFAB,
+        locationUpdateIntervalMs: 1000);
 
     //You can also change the value of updateMapLocationOnPositionChange programatically in runtime.
     //userLocationOptions.updateMapLocationOnPositionChange = false;

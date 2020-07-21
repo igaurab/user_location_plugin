@@ -181,6 +181,8 @@ Container(
     ),
 )
 ```
+* `locationUpdateIntervalMs` desired interval for a location updates, in milliseconds. Default: 1000 milliseconds.
+
 ### Run the example
 
 See the `example/` folder for a working example app.
