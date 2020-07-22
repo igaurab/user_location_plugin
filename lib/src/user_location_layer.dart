@@ -113,7 +113,9 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
   Future<void> _subscribeToLocationChanges() async {
     printLog("OnSubscribe to location change");
     var location = Location();
-    if (await location.requestService()) {
+    if (await location.requestService() &&
+        await location.changeSettings(
+            interval: widget.options.locationUpdateIntervalMs)) {
       _onLocationChangedStreamSubscription =
           location.onLocationChanged.listen((onValue) {
         _addsMarkerLocationToMarkerLocationStream(onValue);

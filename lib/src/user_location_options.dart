@@ -25,6 +25,10 @@ class UserLocationOptions extends LayerOptions {
   bool showHeading;
 
   double defaultZoom;
+  // Desired interval for location updates, in milliseconds. Only affects
+  // Android; Details see underlying location package:
+  // https://github.com/Lyokone/flutterlocation#public-methods-summary
+  int locationUpdateIntervalMs;
 
   UserLocationOptions(
       {@required this.context,
@@ -43,5 +47,6 @@ class UserLocationOptions extends LayerOptions {
       this.fabWidth: 40,
       this.defaultZoom: 15,
       this.zoomToCurrentLocationOnLoad: false,
-      this.showHeading: true});
+      this.showHeading: true,
+      this.locationUpdateIntervalMs: 1000});
 }
