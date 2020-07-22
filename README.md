@@ -183,6 +183,9 @@ Container(
 ```
 * `locationUpdateInBackground` if `false`, the location update stream is paused if the app is in the background. Once the app is resumed the stream is resumed as well. Option can be useful to reduce the battery consumption while the app is running in the background. Default: `true`.
 
+* `locationUpdateIntervalMs` desired interval for a location updates, in milliseconds. Default: 1000 milliseconds.
+
+
 ### Run the example
 
 See the `example/` folder for a working example app.
