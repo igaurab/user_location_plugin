@@ -36,7 +36,6 @@ class UserLocationOptions extends LayerOptions {
   // https://github.com/Lyokone/flutterlocation#public-methods-summary
   int locationUpdateIntervalMs;
 
-
   UserLocationOptions(
       {@required this.context,
       @required this.markers,
@@ -55,7 +54,6 @@ class UserLocationOptions extends LayerOptions {
       this.defaultZoom: 15,
       this.zoomToCurrentLocationOnLoad: false,
       this.showHeading: true,
-      this.locationUpdateInBackground: true});
+      this.locationUpdateInBackground: true,
       this.locationUpdateIntervalMs: 1000});
-
 }
