@@ -25,10 +25,17 @@ class UserLocationOptions extends LayerOptions {
   bool showHeading;
 
   double defaultZoom;
+
+  // If false the location update stream is paused if the app is in the
+  // background (app lifecycle state inactive and paused). Once the app is
+  // resumed the stream is resumed as well.
+  bool locationUpdateInBackground;
+
   // Desired interval for location updates, in milliseconds. Only affects
   // Android; Details see underlying location package:
   // https://github.com/Lyokone/flutterlocation#public-methods-summary
   int locationUpdateIntervalMs;
+
 
   UserLocationOptions(
       {@required this.context,
@@ -48,5 +55,7 @@ class UserLocationOptions extends LayerOptions {
       this.defaultZoom: 15,
       this.zoomToCurrentLocationOnLoad: false,
       this.showHeading: true,
+      this.locationUpdateInBackground: true});
       this.locationUpdateIntervalMs: 1000});
+
 }
