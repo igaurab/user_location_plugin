@@ -154,22 +154,17 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
             builder: (context) {
               return Stack(
                 alignment: AlignmentDirectional.center,
-                overflow: Overflow.visible,
                 children: <Widget>[
                   if (_direction != null && widget.options.showHeading)
-                    Align(
-                      alignment: Alignment.center,
-                      child: ClipOval(
-                        child: Transform.rotate(
-                          // This particular value seems to work
-                          angle: (((_direction * -1) ?? 0) *
-                                  (math.pi / 180) *
-                                  -1) +
-                              160,
-                          child: CustomPaint(
-                            size: Size(60.0, 60.0),
-                            painter: MyDirectionPainter(),
-                          ),
+                    ClipOval(
+                      child: Transform.rotate(
+                        // This particular value seems to work
+                        angle:
+                            (((_direction * -1) ?? 0) * (math.pi / 180) * -1) +
+                                160,
+                        child: CustomPaint(
+                          size: Size(60.0, 60.0),
+                          painter: MyDirectionPainter(),
                         ),
                       ),
                     ),
@@ -181,18 +176,15 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                       color: Colors.blue[300].withOpacity(0.7),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: widget.options.markerWidget ??
-                        Container(
-                          height: 10,
-                          width: 10,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.blueAccent,
-                          ),
+                  widget.options.markerWidget ??
+                      Container(
+                        height: 10,
+                        width: 10,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.blueAccent,
                         ),
-                  ),
+                      ),
                 ],
               );
             },
