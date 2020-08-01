@@ -11,8 +11,7 @@ class UserLocationPlugin implements MapPlugin {
     if (options is UserLocationOptions) {
       return MapsPluginLayer(options, mapState, stream);
     }
-    throw Exception('Unknown options type for MyCustom'
-        'plugin: $options');
+    throw Exception('Unknown options type for MyCustom plugin: $options');
   }
 
   @override
