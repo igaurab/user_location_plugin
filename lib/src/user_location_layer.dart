@@ -56,9 +56,9 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-    _cancel(_locationStatusChangeSubscription);
-    _cancel(_onLocationChangedStreamSubscription);
-    _cancel(_compassStreamSubscription);
+    _locationStatusChangeSubscription?.cancel();
+    _onLocationChangedStreamSubscription?.cancel();
+    _compassStreamSubscription?.cancel();
   }
 
   @override
@@ -68,20 +68,14 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
       switch (state) {
         case AppLifecycleState.inactive:
         case AppLifecycleState.paused:
-          _cancel(_onLocationChangedStreamSubscription);
+          _onLocationChangedStreamSubscription?.cancel();
           break;
         case AppLifecycleState.resumed:
-          _cancel(_onLocationChangedStreamSubscription);
+          _onLocationChangedStreamSubscription?.resume();
           break;
         case AppLifecycleState.detached:
           break;
       }
-    }
-  }
-
-  void _cancel(StreamSubscription streamSubscription) {
-    if (streamSubscription != null) {
-      streamSubscription.cancel();
     }
   }
 
@@ -142,7 +136,6 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
           if (_locationMarker != null) {
             widget.options.markers.remove(_locationMarker);
           }
-          //widget.options.markers.clear();
 
           printLog("Direction : " + (_direction ?? 0).toString());
 
@@ -220,15 +213,12 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
   void _moveMapToCurrentLocation({double zoom}) {
     if (_currentLocation != null) {
       animatedMapMove(
-          LatLng(_currentLocation.latitude ?? LatLng(0, 0),
-              _currentLocation.longitude ?? LatLng(0, 0)),
-          zoom ?? widget.map.zoom ?? 15,
-          widget.options.mapController,
-          this);
-      // widget.options.mapController.move(
-      //     LatLng(_currentLocation.latitude ?? LatLng(0, 0),
-      //         _currentLocation.longitude ?? LatLng(0, 0)),
-      //     widget.map.zoom ?? 15);
+        LatLng(_currentLocation.latitude ?? LatLng(0, 0),
+            _currentLocation.longitude ?? LatLng(0, 0)),
+        zoom ?? widget.map.zoom ?? 15,
+        widget.options.mapController,
+        this,
+      );
     }
   }
 
