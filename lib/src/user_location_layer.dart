@@ -151,10 +151,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                   if (_direction != null && widget.options.showHeading)
                     ClipOval(
                       child: Transform.rotate(
-                        // This particular value seems to work
-                        angle:
-                            (((_direction * -1) ?? 0) * (math.pi / 180) * -1) +
-                                160,
+                        angle: _direction / 180 * math.pi,
                         child: CustomPaint(
                           size: Size(60.0, 60.0),
                           painter: MyDirectionPainter(),
@@ -389,7 +386,7 @@ class MyDirectionPainter extends CustomPainter {
     final Paint paint = new Paint()..shader = gradient.createShader(rect);
 
     // and draw an arc
-    canvas.drawArc(rect, pi / 5, pi * 3 / 5, true, paint);
+    canvas.drawArc(rect, pi * 6 / 5, pi * 3 / 5, true, paint);
   }
 
   @override
