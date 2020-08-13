@@ -284,7 +284,9 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                 //steps to reproduce: 1. open map, 2. click on FAB, 3. exit map.
                 initialize();
                 _moveMapToCurrentLocation(zoom: widget.options.defaultZoom);
-                widget.options.onTapFAB();
+                if (widget.options.onTapFAB != null) {
+                  widget.options.onTapFAB();
+                }
               },
               child: widget.options.moveToCurrentLocationFloatingActionButton ??
                   Container(
