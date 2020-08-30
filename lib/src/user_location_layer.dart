@@ -55,10 +55,17 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
     _locationStatusChangeSubscription?.cancel();
     _onLocationChangedStreamSubscription?.cancel();
     _compassStreamSubscription?.cancel();
+    super.dispose();
+  }
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
   }
 
   @override
