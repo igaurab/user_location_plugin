@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -75,12 +78,18 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
       switch (state) {
         case AppLifecycleState.inactive:
         case AppLifecycleState.paused:
-          _locationStatusChangeSubscription?.cancel();
+          if (Platform.isAndroid) {
+            _locationStatusChangeSubscription?.cancel();
+          }
           _onLocationChangedStreamSubscription?.cancel();
           break;
         case AppLifecycleState.resumed:
-          _handleLocationStatusChanges();
-          _subscribeToLocationChanges();
+          if (Platform.isAndroid) {
+            _handleLocationStatusChanges();
+            _subscribeToLocationChanges();
+          } else {
+            _onLocationChangedStreamSubscription?.resume();
+          }
           break;
         case AppLifecycleState.detached:
           break;
