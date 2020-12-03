@@ -75,10 +75,12 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
       switch (state) {
         case AppLifecycleState.inactive:
         case AppLifecycleState.paused:
+          _locationStatusChangeSubscription?.cancel();
           _onLocationChangedStreamSubscription?.cancel();
           break;
         case AppLifecycleState.resumed:
-          _onLocationChangedStreamSubscription?.resume();
+          _handleLocationStatusChanges();
+          _subscribeToLocationChanges();
           break;
         case AppLifecycleState.detached:
           break;

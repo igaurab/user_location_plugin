@@ -13,11 +13,15 @@ import io.flutter.plugin.common.EventChannel.StreamHandler
 import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
+import android.util.Log
 
 
 class UserLocationPlugin: MethodCallHandler {
   companion object {
-    @JvmStatic
+      var listener: LocationListener? = null
+      var locationManager: LocationManager? = null
+
+              @JvmStatic
     fun registerWith(registrar: Registrar) {
       val channel = MethodChannel(registrar.messenger(), "user_location")
       channel.setMethodCallHandler(UserLocationPlugin())
@@ -27,7 +31,7 @@ class UserLocationPlugin: MethodCallHandler {
      eventChannel.setStreamHandler(
             object: StreamHandler {
                 override fun onListen(p0: Any?, p1: EventSink) {
-                    val listener = object : LocationListener {
+                    listener = object : LocationListener {
                         override fun onLocationChanged(location: android.location.Location) {
                         }
 
@@ -44,13 +48,14 @@ class UserLocationPlugin: MethodCallHandler {
                         }
                     }
 
-                    val locationManager = registrar.activeContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                    locationManager = registrar.activeContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                    locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                             2000,
                             10f, listener)
 
                 }
                 override fun onCancel(p0: Any?) {
+                    locationManager?.removeUpdates(listener)
                 }
             }
      )
