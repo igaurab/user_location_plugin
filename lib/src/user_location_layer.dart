@@ -175,22 +175,32 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                         ),
                       ),
                     ),
-                  Container(
-                    height: 20.0,
-                    width: 20.0,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.blue[300].withOpacity(0.7),
-                    ),
-                  ),
                   widget.options.markerWidget ??
-                      Container(
-                        height: 10,
-                        width: 10,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.blueAccent,
-                        ),
+                      Stack(
+                        children: [
+                          Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              height: 20,
+                              width: 20,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.blue[300].withOpacity(0.7),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.center,
+                            child: Container(
+                              height: 10,
+                              width: 10,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.blueAccent,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                 ],
               );
