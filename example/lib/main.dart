@@ -73,7 +73,7 @@ class HomePage extends StatelessWidget {
             additionalOptions: {
               'accessToken':
                   'pk.eyJ1IjoiaWdhdXJhYiIsImEiOiJjazFhOWlkN2QwYzA5M2RyNWFvenYzOTV0In0.lzjuSBZC6LcOy_oRENLKCg',
-              'id': 'mapbox.streets',
+              'id': 'mapbox.mapbox-streets-v8',
             },
           ),
           MarkerLayerOptions(markers: markers),
