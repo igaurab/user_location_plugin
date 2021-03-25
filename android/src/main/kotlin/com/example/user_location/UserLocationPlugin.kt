@@ -50,11 +50,11 @@ class UserLocationPlugin: MethodCallHandler {
                     locationManager = registrar.activeContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
                     locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                             2000,
-                            10f, listener)
+                            10f, listener ?: return)
 
                 }
                 override fun onCancel(p0: Any?) {
-                    locationManager?.removeUpdates(listener)
+                    locationManager?.removeUpdates(listener ?: return)
                 }
             }
      )
