@@ -13,7 +13,7 @@ class UserLocationOptions extends LayerOptions {
   bool zoomToCurrentLocationOnLoad;
   Widget moveToCurrentLocationFloatingActionButton;
 
-  Function(LatLng) onLocationUpdate;
+  void Function(LatLng location, double speed) onLocationUpdate;
   Function() onTapFAB;
 
   double fabBottom;

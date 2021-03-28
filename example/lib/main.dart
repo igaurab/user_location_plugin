@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
         context: context,
         mapController: mapController,
         markers: markers,
-        onLocationUpdate: (LatLng pos) =>
+        onLocationUpdate: (LatLng pos, double speed) =>
             print("onLocationUpdate ${pos.toString()}"),
         updateMapLocationOnPositionChange: false,
         showMoveToCurrentLocationFloatingActionButton: true,

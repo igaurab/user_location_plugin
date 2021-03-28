@@ -280,8 +280,10 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
     if (widget.options.onLocationUpdate == null) {
       printLog("Stream not provided");
     } else {
-      widget.options
-          .onLocationUpdate(LatLng(onValue.latitude, onValue.longitude));
+      widget.options.onLocationUpdate(
+        LatLng(onValue.latitude, onValue.longitude),
+        onValue.speed,
+      );
     }
   }
 
