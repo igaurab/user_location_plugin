@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:user_location/user_location.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong/latlong.dart';
+import 'package:latlong2/latlong.dart';
 
 void main() => runApp(MyApp());
 
@@ -21,10 +21,10 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
-  MapController mapController = MapController();
-  List<Marker> markers = [];
-  StreamController<LatLng> markerlocationStream = StreamController();
-  UserLocationOptions userLocationOptions;
+  final MapController mapController = MapController();
+  final List<Marker> markers = [];
+  final StreamController<LatLng> markerlocationStream = StreamController();
+  late UserLocationOptions userLocationOptions;
 
   onTapFAB() {
     print('Callback function has been called');
@@ -42,7 +42,7 @@ class HomePage extends StatelessWidget {
         context: context,
         mapController: mapController,
         markers: markers,
-        onLocationUpdate: (LatLng pos, double speed) =>
+        onLocationUpdate: (LatLng pos, double? speed) =>
             print("onLocationUpdate ${pos.toString()}"),
         updateMapLocationOnPositionChange: false,
         showMoveToCurrentLocationFloatingActionButton: true,

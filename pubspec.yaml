@@ -5,13 +5,13 @@ author: Gaurab Panthee <gaurab.panthee@gmail.com>
 homepage: https://github.com/igaurab/UserLocationPlugin
 
 environment:
-  sdk: ">=2.3.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
   location: ^4.1.1
-  flutter_map: ^0.12.0
+  flutter_map: ^0.13.0
   flutter_compass: ^0.6.0
 
 dev_dependencies:
