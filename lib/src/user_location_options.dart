@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:latlong/latlong.dart';
 
 class UserLocationOptions extends LayerOptions {
   BuildContext context;
-  List<Marker?> markers;
-  MapController? mapController;
+  List<Marker> markers;
+  MapController mapController;
 
-  Widget? markerWidget;
+  Widget markerWidget;
   bool updateMapLocationOnPositionChange;
   bool showMoveToCurrentLocationFloatingActionButton;
   bool zoomToCurrentLocationOnLoad;
-  Widget? moveToCurrentLocationFloatingActionButton;
+  Widget moveToCurrentLocationFloatingActionButton;
 
-  void Function(LatLng location, double? speed)? onLocationUpdate;
-  Function()? onTapFAB;
+  void Function(LatLng location, double speed) onLocationUpdate;
+  Function() onTapFAB;
 
   double fabBottom;
   double fabRight;
@@ -37,8 +37,8 @@ class UserLocationOptions extends LayerOptions {
   int locationUpdateIntervalMs;
 
   UserLocationOptions(
-      {required this.context,
-      required this.markers,
+      {@required this.context,
+      @required this.markers,
       this.mapController,
       this.markerWidget,
       this.onLocationUpdate,

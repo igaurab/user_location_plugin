@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:math' as math;
+import "dart:math" show pi;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_map/plugin_api.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:latlong/latlong.dart';
 import 'package:location/location.dart';
 import 'package:user_location/src/user_location_marker.dart';
 import 'package:user_location/src/user_location_options.dart';
@@ -25,24 +26,24 @@ class MapsPluginLayer extends StatefulWidget {
 
 class _MapsPluginLayerState extends State<MapsPluginLayer>
     with TickerProviderStateMixin, WidgetsBindingObserver {
-  LatLng? _currentLocation;
-  UserLocationMarker? _locationMarker;
+  LatLng _currentLocation;
+  UserLocationMarker _locationMarker;
   EventChannel _stream = EventChannel('locationStatusStream');
   var location = Location();
 
-  late bool mapLoaded;
-  late bool initialStateOfupdateMapLocationOnPositionChange;
+  bool mapLoaded;
+  bool initialStateOfupdateMapLocationOnPositionChange;
 
-  double? _direction;
+  double _direction;
 
-  StreamSubscription<LocationData>? _onLocationChangedStreamSubscription;
-  StreamSubscription<CompassEvent>? _compassStreamSubscription;
-  StreamSubscription? _locationStatusChangeSubscription;
+  StreamSubscription<LocationData> _onLocationChangedStreamSubscription;
+  StreamSubscription<CompassEvent> _compassStreamSubscription;
+  StreamSubscription _locationStatusChangeSubscription;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
 
     initialStateOfupdateMapLocationOnPositionChange =
         widget.options.updateMapLocationOnPositionChange;
@@ -55,7 +56,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     _locationStatusChangeSubscription?.cancel();
     _onLocationChangedStreamSubscription?.cancel();
     _compassStreamSubscription?.cancel();
@@ -139,11 +140,11 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
           if (onValue.latitude == null || onValue.longitude == null) {
             _currentLocation = LatLng(0, 0);
           } else {
-            _currentLocation = LatLng(onValue.latitude!, onValue.longitude!);
+            _currentLocation = LatLng(onValue.latitude, onValue.longitude);
           }
 
-          var height = 20.0 * (1 - (onValue.accuracy! / 100));
-          var width = 20.0 * (1 - (onValue.accuracy! / 100));
+          var height = 20.0 * (1 - (onValue.accuracy / 100));
+          var width = 20.0 * (1 - (onValue.accuracy / 100));
           if (height < 0 || width < 0) {
             height = 20;
             width = 20;
@@ -159,7 +160,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
             height: 20.0,
             width: 20.0,
             point:
-                LatLng(_currentLocation!.latitude, _currentLocation!.longitude),
+                LatLng(_currentLocation.latitude, _currentLocation.longitude),
             builder: (context) {
               return Stack(
                 alignment: AlignmentDirectional.center,
@@ -167,7 +168,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                   if (_direction != null && widget.options.showHeading)
                     ClipOval(
                       child: Transform.rotate(
-                        angle: _direction! / 180 * math.pi,
+                        angle: _direction / 180 * math.pi,
                         child: CustomPaint(
                           size: Size(60.0, 60.0),
                           painter: MyDirectionPainter(),
@@ -184,7 +185,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                               width: 20,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Colors.blue[300]!.withOpacity(0.7),
+                                color: Colors.blue[300].withOpacity(0.7),
                               ),
                             ),
                           ),
@@ -225,7 +226,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
             setState(() {
               mapLoaded = true;
             });
-            animatedMapMove(_currentLocation!, widget.options.defaultZoom,
+            animatedMapMove(_currentLocation, widget.options.defaultZoom,
                 widget.options.mapController, this);
           }
         });
@@ -233,14 +234,12 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
     }
   }
 
-  void _moveMapToCurrentLocation({double? zoom}) {
+  void _moveMapToCurrentLocation({double zoom}) {
     if (_currentLocation != null) {
       animatedMapMove(
-        LatLng(
-          _currentLocation!.latitude,
-          _currentLocation!.longitude,
-        ),
-        zoom ?? widget.map.zoom,
+        LatLng(_currentLocation.latitude ?? LatLng(0, 0),
+            _currentLocation.longitude ?? LatLng(0, 0)),
+        zoom ?? widget.map.zoom ?? 15,
         widget.options.mapController,
         this,
       );
@@ -249,7 +248,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
 
   void _handleLocationStatusChanges() {
     printLog(_stream.toString());
-    bool? _locationStatusChanged;
+    bool _locationStatusChanged;
     if (_locationStatusChanged == null) {
       _locationStatusChangeSubscription =
           _stream.receiveBroadcastStream().listen((onData) {
@@ -268,7 +267,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
 
   void _handleCompassDirection() {
     if (widget.options.showHeading) {
-      _compassStreamSubscription = FlutterCompass.events!.listen((event) {
+      _compassStreamSubscription = FlutterCompass.events.listen((event) {
         setState(() {
           _direction = event.heading;
         });
@@ -281,8 +280,8 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
     if (widget.options.onLocationUpdate == null) {
       printLog("Stream not provided");
     } else {
-      widget.options.onLocationUpdate!(
-        LatLng(onValue.latitude!, onValue.longitude!),
+      widget.options.onLocationUpdate(
+        LatLng(onValue.latitude, onValue.longitude),
         onValue.speed,
       );
     }
@@ -314,7 +313,7 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
                 initialize();
                 _moveMapToCurrentLocation(zoom: widget.options.defaultZoom);
                 if (widget.options.onTapFAB != null) {
-                  widget.options.onTapFAB!();
+                  widget.options.onTapFAB();
                 }
               },
               child: widget.options.moveToCurrentLocationFloatingActionButton ??
@@ -382,11 +381,11 @@ class _MapsPluginLayerState extends State<MapsPluginLayer>
   }
 
   void forceMapUpdate() {
-    var zoom = widget.options.mapController!.zoom;
-    widget.options.mapController!.move(widget.options.mapController!.center,
-        widget.options.mapController!.zoom + 0.000001);
-    widget.options.mapController!
-        .move(widget.options.mapController!.center, zoom);
+    var zoom = widget.options.mapController.zoom;
+    widget.options.mapController.move(widget.options.mapController.center,
+        widget.options.mapController.zoom + 0.000001);
+    widget.options.mapController
+        .move(widget.options.mapController.center, zoom);
   }
 }
 
